@@ -36,17 +36,17 @@ local RENDER_VARIANTS = {
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
-   text_default          = { bg = '#45475A', fg = '#1C1B19' },
-   text_hover            = { bg = '#587D8C', fg = '#1C1B19' },
-   text_active           = { bg = '#7FB4CA', fg = '#11111B' },
+   text_default          = { bg = '#191919', fg = '#414141' },
+   text_hover            = { bg = '#191919', fg = '#555555' },
+   text_active           = { bg = '#2a2a2a', fg = '#878787' },
 
-   unseen_output_default = { bg = '#45475A', fg = '#FFA066' },
-   unseen_output_hover   = { bg = '#587D8C', fg = '#FFA066' },
-   unseen_output_active  = { bg = '#7FB4CA', fg = '#FFA066' },
+   unseen_output_default = { bg = '#191919', fg = '#414141' },
+   unseen_output_hover   = { bg = '#191919', fg = '#555555' },
+   unseen_output_active  = { bg = '#2a2a2a', fg = '#b3ad9f' },
 
-   scircle_default       = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#45475A' },
-   scircle_hover         = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#587D8C' },
-   scircle_active        = { bg = 'rgba(0, 0, 0, 0.4)', fg = '#7FB4CA' },
+   scircle_default       = { bg = '#191919', fg = '#191919' },
+   scircle_hover         = { bg = '#191919', fg = '#191919' },
+   scircle_active        = { bg = '#191919', fg = '#2a2a2a' },
 }
 
 ---@param proc string

@@ -12,11 +12,11 @@ local M = {}
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
-   label_text   = { fg = '#CDD6F4' },
-   icon_default = { fg = '#89B4FA' },
-   icon_wsl     = { fg = '#FAB387' },
-   icon_ssh     = { fg = '#F38BA8' },
-   icon_unix    = { fg = '#CBA6F7' },
+   label_text   = { fg = '#707070' },
+   icon_default = { fg = '#878787' },
+   icon_wsl     = { fg = '#b3b3b3' },
+   icon_ssh     = { fg = '#b3ad9f' },
+   icon_unix    = { fg = '#778777' },
 }
 
 local cells = Cells:new()
