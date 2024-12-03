@@ -1,11 +1,20 @@
 return {
    -- behaviours
+   set_environment_variables = { TERMINAL = 'WezTerm' },
+
    automatically_reload_config = true,
    exit_behavior = 'CloseOnCleanExit', -- if the shell program exited with a successful status
    exit_behavior_messaging = 'Verbose',
+   pane_focus_follows_mouse = false,
    status_update_interval = 1000,
 
-   scrollback_lines = 20000,
+   scrollback_lines = 5000,
+
+   visual_bell = {
+      fade_in_duration_ms = 75,
+      fade_out_duration_ms = 75,
+      target = 'CursorColor',
+   },
 
    hyperlink_rules = {
       -- Matches: a URL in parens: (URL)
