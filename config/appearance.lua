@@ -9,6 +9,7 @@ return {
    webgpu_power_preference = 'HighPerformance',
    webgpu_preferred_adapter = gpu_adapters:pick_best(),
    -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Dx12', 'IntegratedGpu'),
+   -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Gl', 'Other'),
 
    -- cursor
    animation_fps = 60,
