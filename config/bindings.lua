@@ -64,7 +64,7 @@ local keys = {
    -- { key = "phys:Space", mods = "LEADER",        action = act.ActivateCommandPalette },
 
    -- Send C-a when pressing C-a twice
-   { key = 'a', mods = 'LEADER | CTRL', action = act.SendKey({ key = 'a', mods = 'CTRL' }) },
+   { key = 's', mods = 'LEADER | CTRL', action = act.SendKey({ key = 's', mods = 'CTRL' }) },
 
    -- Pane split
    { key = '-', mods = 'LEADER', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
@@ -150,7 +150,7 @@ local mouse_bindings = {
 return {
    disable_default_key_bindings = true,
    -- disable_default_mouse_bindings = true,
-   leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 3000 },
+   leader = { key = 's', mods = 'CTRL', timeout_milliseconds = 3000 },
    keys = keys,
    key_tables = key_tables,
    mouse_bindings = mouse_bindings,
