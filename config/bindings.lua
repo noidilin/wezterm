@@ -40,8 +40,6 @@ end
 local keys = {
    -- Remove default bindings
    { key = 'n', mods = 'CTRL', action = act.DisableDefaultAssignment },
-   -- { key = "Space", mods = "CTRL",         action = act.DisableDefaultAssignment },
-   -- { key = "Space", mods = "SHIFT",        action = act.DisableDefaultAssignment },
    { key = 'h', mods = 'CTRL', action = act.DisableDefaultAssignment },
    { key = 'j', mods = 'CTRL', action = act.DisableDefaultAssignment },
    { key = 'k', mods = 'CTRL', action = act.DisableDefaultAssignment },
@@ -53,15 +51,14 @@ local keys = {
    { key = 'Space', mods = 'SHIFT', action = act.SendKey({ key = 'Space', mods = 'SHIFT' }), },
    { key = 'Space', mods = 'CTRL', action = act.SendKey({ key = 'Space', mods = 'CTRL' }), },
 
+  -- paste from the clipboard
+   { key = 'V', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
+
    { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
    { key = 'F3', mods = 'NONE', action = act.ActivateCommandPalette },
    { key = 'F4', mods = 'NONE', action = act.ShowLauncher },
    { key = 'F5', mods = 'NONE', action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
-   {
-      key = 'F6',
-      mods = 'NONE',
-      action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }),
-   },
+   { key = 'F6', mods = 'NONE', action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }), },
    { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
    { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
    -- { key = "phys:Space", mods = "LEADER",        action = act.ActivateCommandPalette },
@@ -97,16 +94,8 @@ local keys = {
    { key = '>', mods = 'LEADER|SHIFT', action = act.MoveTabRelative(1) },
 
    -- Key table for moving tabs and resize pane
-   {
-      key = 'm',
-      mods = 'LEADER',
-      action = act.ActivateKeyTable({ name = 'move_tab', one_shot = false }),
-   },
-   {
-      key = 's',
-      mods = 'LEADER',
-      action = act.ActivateKeyTable({ name = 'resize_pane', one_shot = false }),
-   },
+   { key = 'm', mods = 'LEADER', action = act.ActivateKeyTable({ name = 'move_tab', one_shot = false }), },
+   { key = 's', mods = 'LEADER', action = act.ActivateKeyTable({ name = 'resize_pane', one_shot = false }), },
 
    -- smart-splits
    ---- move between split panes
