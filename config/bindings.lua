@@ -49,12 +49,9 @@ local keys = {
    { key = 't', mods = 'CTRL | SHIFT', action = act.DisableDefaultAssignment },
    { key = 'w', mods = 'CTRL | SHIFT', action = act.DisableDefaultAssignment },
 
-   -- Fix Space Key
-   {
-      key = 'Space',
-      mods = 'SHIFT',
-      action = wezterm.action.SendKey({ key = '\\', mods = 'CTRL' }),
-   },
+   -- HACK: resend space key stroke (https://github.com/wezterm/wezterm/issues/4055#issuecomment-1694542317)
+   { key = 'Space', mods = 'SHIFT', action = act.SendKey({ key = 'Space', mods = 'SHIFT' }), },
+   { key = 'Space', mods = 'CTRL', action = act.SendKey({ key = 'Space', mods = 'CTRL' }), },
 
    { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
    { key = 'F3', mods = 'NONE', action = act.ActivateCommandPalette },
