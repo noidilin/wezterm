@@ -1,32 +1,32 @@
 -- A slightly altered version of catppucchin mocha
 -- stylua: ignore
 local mocha = {
-   rosewater = '#f5e0dc',
-   flamingo  = '#f2cdcd',
-   pink      = '#f5c2e7',
-   mauve     = '#cba6f7',
-   red       = '#f38ba8',
-   maroon    = '#eba0ac',
-   peach     = '#fab387',
-   yellow    = '#f9e2af',
-   green     = '#a6e3a1',
-   teal      = '#94e2d5',
-   sky       = '#89dceb',
-   sapphire  = '#74c7ec',
-   blue      = '#89b4fa',
-   lavender  = '#b4befe',
-   text      = '#cdd6f4',
-   subtext1  = '#bac2de',
-   subtext0  = '#a6adc8',
-   overlay2  = '#9399b2',
-   overlay1  = '#7f849c',
-   overlay0  = '#6c7086',
-   surface2  = '#585b70',
-   surface1  = '#45475a',
-   surface0  = '#313244',
-   base      = '#1f1f28',
-   mantle    = '#181825',
-   crust     = '#11111b',
+   rosewater = '#dcb5a5',
+   flamingo  = '#c8a492',
+   pink      = '#9f9fbd',
+   mauve     = '#797994',
+   red       = '#b07878',
+   maroon    = '#cc9393',
+   peach     = '#d6caab',
+   yellow    = '#ebd6b7',
+   green     = '#778777',
+   teal      = '#9bb09b',
+   sky       = '#92b3b3',
+   sapphire  = '#769494',
+   blue      = '#7d96ad',
+   lavender  = '#9db2cf',
+   text      = '#b3b3b3',
+   subtext1  = '#9d9d9d',
+   subtext0  = '#878787',
+   overlay2  = '#707070',
+   overlay1  = '#5d5d5d',
+   overlay0  = '#4e4e4e',
+   surface2  = '#414141',
+   surface1  = '#353535',
+   surface0  = '#2a2a2a',
+   base      = '#1e1e1e',
+   mantle    = '#191919',
+   crust     = '#151515',
 }
 
 local colorscheme = {
@@ -50,18 +50,18 @@ local colorscheme = {
    cursor_border = '#878787',
    selection_fg = '#8e8e8e',
    cursor_fg = '#eaeaea',
-   -- scrollbar_thumb = '#4e4e4e',
+   compose_cursor = '#dad5c8',
 
    tab_bar = {
       -- The color of the strip that goes along the top of the window
       -- (does not apply when fancy tab bar is in use)
       background = '#191919',
       active_tab = {
-         bg_color = '#242424',  -- background color
-         fg_color = '#9d9d9d',  -- text color
-         intensity = 'Bold',    -- default is "Normal" (options: "Half", "Normal" or "Bold")
-         underline = 'Single',  -- default is "None" (options: "None", "Single" or "Double")
-         italic = false,        -- default is false
+         bg_color = '#242424', -- background color
+         fg_color = '#9d9d9d', -- text color
+         intensity = 'Bold', -- default is "Normal" (options: "Half", "Normal" or "Bold")
+         underline = 'Single', -- default is "None" (options: "None", "Single" or "Double")
+         italic = false, -- default is false
          strikethrough = false, -- default is false
       },
 
@@ -92,9 +92,8 @@ local colorscheme = {
       [16] = mocha.peach,
       [17] = mocha.rosewater,
    },
-   scrollbar_thumb = mocha.surface2,
+   scrollbar_thumb = mocha.overlay0,
    split = mocha.overlay0,
-   compose_cursor = mocha.flamingo,
 }
 
 return colorscheme
