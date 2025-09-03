@@ -96,11 +96,11 @@ local RENDER_VARIANTS = {
 local colors = {
    text_default          = { bg = '#191919', fg = '#414141' },
    text_hover            = { bg = '#191919', fg = '#555555' },
-   text_active           = { bg = '#2a2a2a', fg = '#878787' },
+   text_active           = { bg = '#2a2a2a', fg = '#9d9d9d' },
 
    unseen_output_default = { bg = '#191919', fg = '#414141' },
    unseen_output_hover   = { bg = '#191919', fg = '#555555' },
-   unseen_output_active  = { bg = '#2a2a2a', fg = '#b3ad9f' },
+   unseen_output_active  = { bg = '#2a2a2a', fg = '#9d9d9d' },
 
    scircle_default       = { bg = '#191919', fg = '#191919' },
    scircle_hover         = { bg = '#191919', fg = '#191919' },
