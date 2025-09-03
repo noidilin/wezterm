@@ -26,7 +26,7 @@ return {
    -- background = backdrops:create_opts(),
 
    -- scrollbar
-   enable_scroll_bar = true,
+   enable_scroll_bar = false,
 
    -- tab bar
    enable_tab_bar = true,
