@@ -2,8 +2,12 @@
 local colorscheme = {
    foreground = '#b3b3b3',
    background = '#191919',
+   compose_cursor = '#9d9d9d',
+   cursor_fg = '#eaeaea',
    cursor_bg = '#878787',
+   cursor_border = '#878787',
    selection_bg = '#303030',
+   selection_fg = '#9d9d9d',
    -- order: black > red > green > yellow > blue > magenta > cyan > white
    ansi = { '#474747', '#b07878', '#778777', '#d6caab', '#7d96ad', '#797994', '#769494', '#dad5c8' },
    brights = {
