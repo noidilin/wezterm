@@ -97,6 +97,10 @@ local keys = {
    { key = 'm', mods = 'LEADER', action = act.ActivateKeyTable({ name = 'move_tab', one_shot = false }), },
    { key = 's', mods = 'LEADER', action = act.ActivateKeyTable({ name = 'resize_pane', one_shot = false }), },
 
+  -- Scroll by half page
+  { key = 'PageUp', mods = 'SHIFT', action = act.ScrollByPage(-0.5) },
+  { key = 'PageDown', mods = 'SHIFT', action = act.ScrollByPage(0.5) },
+
    -- smart-splits
    ---- move between split panes
    split_nav('move', 'h'),
