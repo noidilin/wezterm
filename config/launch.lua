@@ -9,6 +9,7 @@ if platform.is_win then
    options.default_prog = { 'nu' }
    options.launch_menu = {
       { label = 'PowerShell Core', args = { 'pwsh', '-NoLogo' } },
+      { label = 'WSL Arch', args = { 'wsl', '~', '-d', 'archlinux' } },
       { label = 'Nushell', args = { 'nu' } },
       { label = 'Command Prompt', args = { 'cmd' } },
       { label = 'PowerShell Desktop', args = { 'powershell' } },
