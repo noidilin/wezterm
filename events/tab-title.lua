@@ -43,12 +43,11 @@ local M = {}
 
 local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
 local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
-local GLYPH_CIRCLE = nf.fa_circle --[[  ]]
+local GLYPH_CIRCLE = nf.cod_circle_filled --[[  ]]
 local GLYPH_ADMIN = nf.md_shield_half_full --[[ 󰞀 ]]
-local GLYPH_LINUX = nf.cod_terminal_linux --[[  ]]
-local GLYPH_DEBUG = nf.fa_bug --[[  ]]
--- local GLYPH_SEARCH = nf.fa_search --[[  ]]
-local GLYPH_SEARCH = '🔭'
+local GLYPH_LINUX = nf.dev_linux --[[  ]]
+local GLYPH_DEBUG = nf.md_bug_outline --[[ 󰨰 ]]
+local GLYPH_SEARCH = nf.cod_search_fuzzy --[[  ]]
 
 local GLYPH_UNSEEN_NUMBERED_BOX = {
    [1] = nf.md_numeric_1_box_multiple, --[[ 󰼏 ]]
