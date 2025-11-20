@@ -11,12 +11,6 @@ return {
 
    scrollback_lines = 5000,
 
-   visual_bell = {
-      fade_in_duration_ms = 75,
-      fade_out_duration_ms = 75,
-      target = 'CursorColor',
-   },
-
    hyperlink_rules = {
       -- Matches: a URL in parens: (URL)
       {
