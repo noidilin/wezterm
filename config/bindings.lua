@@ -86,8 +86,8 @@ local keys = {
    { key = '&', mods = 'LEADER|SHIFT', action = act.CloseCurrentTab({ confirm = false }) },
 
    -- Adjust tab order
-   { key = '[', mods = 'LEADER', action = act.ActivateTabRelative(-1) },
-   { key = ']', mods = 'LEADER', action = act.ActivateTabRelative(1) },
+   { key = 'Tab', mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(-1) },
+   { key = 'Tab', mods = 'CTRL', action = act.ActivateTabRelative(1) },
    { key = 'n', mods = 'LEADER', action = act.ShowTabNavigator },
    ---- Or shortcuts to move tab w/o move_tab table. SHIFT is for when caps lock is on
    { key = '<', mods = 'LEADER|SHIFT', action = act.MoveTabRelative(-1) },
