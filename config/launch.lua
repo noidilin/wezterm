@@ -8,10 +8,10 @@ local options = {
 if platform.is_win then
    options.default_prog = { 'nu' }
    options.launch_menu = {
+      { label = 'WSL Arch', domain = { DomainName = 'WSL:Arch' } },
       { label = 'PowerShell Core', args = { 'pwsh', '-NoLogo' } },
-      { label = 'WSL Arch', args = { 'wsl', '~', '-d', 'archlinux' } },
-      { label = 'Nushell', args = { 'nu' } },
       { label = 'Command Prompt', args = { 'cmd' } },
+      { label = 'Nushell', args = { 'nu' } },
       { label = 'PowerShell Desktop', args = { 'powershell' } },
    }
 elseif platform.is_mac then
