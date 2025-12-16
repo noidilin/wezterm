@@ -51,7 +51,7 @@ local keys = {
    { key = 'Space', mods = 'SHIFT', action = act.SendKey({ key = 'Space', mods = 'SHIFT' }), },
    { key = 'Space', mods = 'CTRL', action = act.SendKey({ key = 'Space', mods = 'CTRL' }), },
 
-  -- paste from the clipboard
+   -- paste from the clipboard
    { key = 'V', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
 
    { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
@@ -65,6 +65,12 @@ local keys = {
 
    -- Send original key stroke when pressing leader key twice
    { key = 'q', mods = 'LEADER | CTRL', action = act.SendKey({ key = 'q', mods = 'CTRL' }) },
+
+   -- Scroll by half page
+   { key = 'PageUp', mods = 'SHIFT', action = act.ScrollByPage(-0.5) },
+   { key = 'PageDown', mods = 'SHIFT', action = act.ScrollByPage(0.5) },
+   { key = 'Z', mods = 'NONE', action = act.CopyMode('MoveBackwardSemanticZone') },
+   { key = 'z', mods = 'NONE', action = act.CopyMode('MoveForwardSemanticZone') },
 
    -- Pane split
    { key = '-', mods = 'LEADER', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
@@ -88,7 +94,6 @@ local keys = {
    -- Adjust tab order
    { key = 'Tab', mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(-1) },
    { key = 'Tab', mods = 'CTRL', action = act.ActivateTabRelative(1) },
-   { key = 'n', mods = 'LEADER', action = act.ShowTabNavigator },
    ---- Or shortcuts to move tab w/o move_tab table. SHIFT is for when caps lock is on
    { key = '<', mods = 'LEADER|SHIFT', action = act.MoveTabRelative(-1) },
    { key = '>', mods = 'LEADER|SHIFT', action = act.MoveTabRelative(1) },
@@ -96,10 +101,6 @@ local keys = {
    -- Key table for moving tabs and resize pane
    { key = 'm', mods = 'LEADER', action = act.ActivateKeyTable({ name = 'move_tab', one_shot = false }), },
    { key = 's', mods = 'LEADER', action = act.ActivateKeyTable({ name = 'resize_pane', one_shot = false }), },
-
-  -- Scroll by half page
-  { key = 'PageUp', mods = 'SHIFT', action = act.ScrollByPage(-0.5) },
-  { key = 'PageDown', mods = 'SHIFT', action = act.ScrollByPage(0.5) },
 
    -- smart-splits
    ---- move between split panes
