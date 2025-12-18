@@ -69,8 +69,6 @@ local keys = {
    -- Scroll by half page
    { key = 'PageUp', mods = 'SHIFT', action = act.ScrollByPage(-0.5) },
    { key = 'PageDown', mods = 'SHIFT', action = act.ScrollByPage(0.5) },
-   { key = 'Z', mods = 'NONE', action = act.CopyMode('MoveBackwardSemanticZone') },
-   { key = 'z', mods = 'NONE', action = act.CopyMode('MoveForwardSemanticZone') },
 
    -- Pane split
    { key = '-', mods = 'LEADER', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
