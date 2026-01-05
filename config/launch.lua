@@ -19,7 +19,7 @@ if platform.is_win then
       { label = 'Windows PowerShell', domain = { DomainName = 'local' }, args = { 'powershell' } },
    }
 elseif platform.is_mac then
-   options.default_prog = { 'zsh', '-l' }
+   options.default_prog = { '/opt/homebrew/bin/nu', '-l' }
    options.launch_menu = {
       { label = 'Bash', args = { 'bash', '-l' } },
       { label = 'Fish', args = { '/opt/homebrew/bin/fish', '-l' } },

@@ -1,6 +1,11 @@
+-- Get the home directory (works on both macOS and Windows)
+local home = os.getenv('HOME') or os.getenv('USERPROFILE') or ''
 return {
    -- behaviours
-   set_environment_variables = { TERMINAL = 'WezTerm' },
+   set_environment_variables = {
+      XDG_CONFIG_HOME = home .. '/.config',
+      TERMINAL = 'WezTerm',
+   },
 
    automatically_reload_config = true,
    exit_behavior = 'CloseOnCleanExit', -- if the shell program exited with a successful status
