@@ -24,7 +24,7 @@ local options = {
 if platform.is_win then
    options.ssh_domains = {
       {
-         name = 'WSL:Arch',
+         name = 'wsl.arch',
          distribution = 'archlinux',
          username = 'noid',
          default_cwd = '/home/noid',
