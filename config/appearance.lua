@@ -56,6 +56,10 @@ return {
       brightness = is_dark and 0.8 or 0.95,
    },
 
+   command_palette_bg_color = '#242424',
+   command_palette_fg_color = '#9d9d9d',
+   command_palette_rows = 14,
+
    visual_bell = {
       fade_in_function = 'EaseIn',
       fade_in_duration_ms = 250,
