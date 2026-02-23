@@ -5,11 +5,12 @@ local is_dark = true
 
 return {
    max_fps = 60,
-   front_end = 'WebGpu',
+   front_end = 'WebGpu', ---@type 'WebGpu' | 'OpenGL' | 'Software'
    webgpu_power_preference = 'HighPerformance',
    webgpu_preferred_adapter = gpu_adapters:pick_best(),
    -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Dx12', 'IntegratedGpu'),
    -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Gl', 'Other'),
+   underline_thickness = '1.5pt',
 
    -- cursor
    animation_fps = 60,
@@ -53,5 +54,13 @@ return {
    inactive_pane_hsb = {
       saturation = 0.1,
       brightness = is_dark and 0.8 or 0.95,
+   },
+
+   visual_bell = {
+      fade_in_function = 'EaseIn',
+      fade_in_duration_ms = 250,
+      fade_out_function = 'EaseOut',
+      fade_out_duration_ms = 250,
+      target = 'CursorColor',
    },
 }

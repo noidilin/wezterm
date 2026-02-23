@@ -57,6 +57,8 @@ local colorscheme = {
          fg_color = '#5d5d5d',
       },
    },
+   split = '#353535',
+   compose_cursor = '#5d5d5d',
 }
 
 return colorscheme

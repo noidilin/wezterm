@@ -7,6 +7,7 @@ return {
    exit_behavior_messaging = 'Verbose',
    pane_focus_follows_mouse = false,
    status_update_interval = 1000,
+   audible_bell = 'Disabled',
 
    scrollback_lines = 5000,
 

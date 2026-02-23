@@ -108,6 +108,12 @@ local keys = {
    split_nav('resize', 'j'),
    split_nav('resize', 'k'),
    split_nav('resize', 'l'),
+
+   -- panes: scroll pane
+   { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
+   { key = 'd',        mods = mod.SUPER, action = act.ScrollByLine(5) },
+   { key = 'PageUp',   mods = 'NONE',    action = act.ScrollByPage(-0.75) },
+   { key = 'PageDown', mods = 'NONE',    action = act.ScrollByPage(0.75) },
 }
 
 for i = 1, 9 do
