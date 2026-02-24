@@ -41,6 +41,9 @@ local nf = wezterm.nerdfonts
 
 local M = {}
 
+---@type table<number, boolean>
+local bell_tabs = {}
+
 local GLYPH_SCIRCLE_LEFT = nf.ple_left_half_circle_thick --[[  ]]
 local GLYPH_SCIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[  ]]
 local GLYPH_CIRCLE = nf.cod_circle_filled --[[  ]]
@@ -48,6 +51,11 @@ local GLYPH_ADMIN = nf.md_shield_half_full --[[ 󰞀 ]]
 local GLYPH_LINUX = nf.dev_linux --[[  ]]
 local GLYPH_DEBUG = nf.md_bug_outline --[[ 󰨰 ]]
 local GLYPH_SEARCH = nf.cod_search_fuzzy --[[  ]]
+local GLYPH_ZOOM = ' '
+local GLYPH_BELL = ' '
+local GLYPH_PROGRESS_ICONS = { '󰪞', '󰪟', '󰪠', '󰪡', '󰪢', '󰪣', '󰪤', '󰪥' }
+local GLYPH_PROGRESS_ERROR = ' '
+local GLYPH_PROGRESS_INDETERMINATE = ' 󰪡'
 
 local GLYPH_UNSEEN_NUMBERED_BOX = {
    [1] = nf.md_numeric_1_box_multiple, --[[ 󰼏 ]]
@@ -81,12 +89,52 @@ local TITLE_INSET = {
 }
 
 local RENDER_VARIANTS = {
-   { 'scircle_left', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'title', 'unseen_output', 'padding', 'scircle_right' },
-   { 'scircle_left', 'admin', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'admin', 'title', 'unseen_output', 'padding', 'scircle_right' },
-   { 'scircle_left', 'wsl', 'title', 'padding', 'scircle_right' },
-   { 'scircle_left', 'wsl', 'title', 'unseen_output', 'padding', 'scircle_right' },
+   { 'scircle_left', 'title', 'unseen_output', 'zoom', 'attention', 'progress', 'padding', 'scircle_right' },
+   { 'scircle_left', 'title', 'unseen_output', 'zoom', 'attention', 'progress', 'padding', 'scircle_right' },
+   {
+      'scircle_left',
+      'admin',
+      'title',
+      'unseen_output',
+      'zoom',
+      'attention',
+      'progress',
+      'padding',
+      'scircle_right',
+   },
+   {
+      'scircle_left',
+      'admin',
+      'title',
+      'unseen_output',
+      'zoom',
+      'attention',
+      'progress',
+      'padding',
+      'scircle_right',
+   },
+   {
+      'scircle_left',
+      'wsl',
+      'title',
+      'unseen_output',
+      'zoom',
+      'attention',
+      'progress',
+      'padding',
+      'scircle_right',
+   },
+   {
+      'scircle_left',
+      'wsl',
+      'title',
+      'unseen_output',
+      'zoom',
+      'attention',
+      'progress',
+      'padding',
+      'scircle_right',
+   },
 }
 
 
@@ -100,6 +148,18 @@ local colors = {
    unseen_output_default = { bg = '#191919', fg = '#414141' },
    unseen_output_hover   = { bg = '#191919', fg = '#555555' },
    unseen_output_active  = { bg = '#2a2a2a', fg = '#9d9d9d' },
+
+   zoom_default          = { bg = '#191919', fg = '#414141' },
+   zoom_hover            = { bg = '#191919', fg = '#555555' },
+   zoom_active           = { bg = '#2a2a2a', fg = '#9d9d9d' },
+
+   attention_default     = { bg = '#191919', fg = '#d6caab' },
+   attention_hover       = { bg = '#191919', fg = '#ebd6b7' },
+   attention_active      = { bg = '#2a2a2a', fg = '#ebd6b7' },
+
+   progress_default      = { bg = '#191919', fg = '#414141' },
+   progress_hover        = { bg = '#191919', fg = '#555555' },
+   progress_active       = { bg = '#2a2a2a', fg = '#9d9d9d' },
 
    scircle_default       = { bg = '#191919', fg = '#191919' },
    scircle_hover         = { bg = '#191919', fg = '#191919' },
@@ -172,6 +232,46 @@ local function check_unseen_output(panes)
    return unseen_output, unseen_output_count
 end
 
+---@param value number
+local function clamp_progress(value)
+   return math.max(0, math.min(100, math.floor(value)))
+end
+
+---@param percentage number
+local function progress_icon(percentage)
+   local idx = math.floor(clamp_progress(percentage) / 12) + 1
+   if idx > #GLYPH_PROGRESS_ICONS then
+      idx = #GLYPH_PROGRESS_ICONS
+   end
+   return GLYPH_PROGRESS_ICONS[idx]
+end
+
+---@param pane any
+---@return string, string|nil
+local function get_progress_display(pane)
+   local progress = pane.progress
+   if progress == nil then
+      return '', nil
+   end
+
+   if type(progress) == 'table' then
+      if type(progress.Percentage) == 'number' then
+         return ' ' .. progress_icon(progress.Percentage), '#778777'
+      end
+
+      if progress.Error ~= nil then
+         if type(progress.Error) == 'number' then
+            return ' ' .. progress_icon(progress.Error), '#b07878'
+         end
+         return GLYPH_PROGRESS_ERROR, '#b07878'
+      end
+   elseif progress == 'Indeterminate' then
+      return GLYPH_PROGRESS_INDETERMINATE, '#7d96ad'
+   end
+
+   return '', nil
+end
+
 ---
 -- =================
 -- Tab class and API
@@ -186,6 +286,10 @@ end
 ---@field is_admin boolean
 ---@field unseen_output boolean
 ---@field unseen_output_count number
+---@field has_bell boolean
+---@field is_zoomed boolean
+---@field progress_text string
+---@field progress_color string|nil
 ---@field is_active boolean
 local Tab = {}
 Tab.__index = Tab
@@ -200,6 +304,10 @@ function Tab:new()
       is_admin = false,
       unseen_output = false,
       unseen_output_count = 0,
+      has_bell = false,
+      is_zoomed = false,
+      progress_text = '',
+      progress_color = nil,
    }
    return setmetatable(tab, self)
 end
@@ -216,6 +324,9 @@ function Tab:set_info(event_opts, tab, max_width)
    ) ~= nil
    self.unseen_output = false
    self.unseen_output_count = 0
+   self.has_bell = bell_tabs[tab.tab_id] == true
+   self.is_zoomed = tab.active_pane.is_zoomed
+   self.progress_text, self.progress_color = get_progress_display(tab.active_pane)
 
    if not event_opts.hide_active_tab_unseen or not tab.is_active then
       self.unseen_output, self.unseen_output_count = check_unseen_output(tab.panes)
@@ -223,6 +334,18 @@ function Tab:set_info(event_opts, tab, max_width)
 
    local inset = (self.is_admin or self.is_wsl) and TITLE_INSET.ICON or TITLE_INSET.DEFAULT
    if self.unseen_output then
+      inset = inset + 2
+   end
+
+   if self.is_zoomed then
+      inset = inset + 2
+   end
+
+   if self.has_bell then
+      inset = inset + 2
+   end
+
+   if self.progress_text ~= '' then
       inset = inset + 2
    end
 
@@ -241,6 +364,9 @@ function Tab:create_cells()
       :add_segment('wsl', ' ' .. GLYPH_LINUX)
       :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
       :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE)
+      :add_segment('zoom', '')
+      :add_segment('attention', '')
+      :add_segment('progress', '')
       :add_segment('padding', ' ')
       :add_segment('scircle_right', GLYPH_SCIRCLE_RIGHT)
 end
@@ -277,14 +403,39 @@ function Tab:update_cells(event_opts, is_active, hover)
       )
    end
 
+   if not self.unseen_output then
+      self.cells:update_segment_text('unseen_output', '')
+   end
+
+   if self.is_zoomed then
+      self.cells:update_segment_text('zoom', GLYPH_ZOOM)
+   else
+      self.cells:update_segment_text('zoom', '')
+   end
+
+   if self.has_bell then
+      self.cells:update_segment_text('attention', GLYPH_BELL)
+   else
+      self.cells:update_segment_text('attention', '')
+   end
+
+   self.cells:update_segment_text('progress', self.progress_text)
+
    self.cells
       :update_segment_colors('scircle_left', colors['scircle_' .. tab_state])
       :update_segment_colors('admin', colors['text_' .. tab_state])
       :update_segment_colors('wsl', colors['text_' .. tab_state])
       :update_segment_colors('title', colors['text_' .. tab_state])
       :update_segment_colors('unseen_output', colors['unseen_output_' .. tab_state])
+      :update_segment_colors('zoom', colors['zoom_' .. tab_state])
+      :update_segment_colors('attention', colors['attention_' .. tab_state])
+      :update_segment_colors('progress', colors['progress_' .. tab_state])
       :update_segment_colors('padding', colors['text_' .. tab_state])
       :update_segment_colors('scircle_right', colors['scircle_' .. tab_state])
+
+   if self.progress_color then
+      self.cells:update_segment_colors('progress', { fg = self.progress_color })
+   end
 end
 
 ---@return FormatItem[] (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
@@ -353,11 +504,26 @@ M.setup = function(opts)
    end)
 
    -- BUILTIN EVENT
+   wezterm.on('bell', function(window, pane)
+      local active_tab_id = window:active_tab():tab_id()
+      local bell_tab_id = pane:tab():tab_id()
+
+      if active_tab_id ~= bell_tab_id then
+         bell_tabs[bell_tab_id] = true
+      end
+   end)
+
+   -- BUILTIN EVENT
    wezterm.on('format-tab-title', function(tab, _tabs, _panes, _config, hover, max_width)
+      if tab.is_active and bell_tabs[tab.tab_id] then
+         bell_tabs[tab.tab_id] = nil
+      end
+
       if not tab_list[tab.tab_id] then
          tab_list[tab.tab_id] = Tab:new()
          tab_list[tab.tab_id]:set_info(valid_opts, tab, max_width)
          tab_list[tab.tab_id]:create_cells()
+         tab_list[tab.tab_id]:update_cells(valid_opts, tab.is_active, hover)
          return tab_list[tab.tab_id]:render()
       end
 
