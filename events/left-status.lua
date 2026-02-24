@@ -14,22 +14,22 @@ local GLYPH_RESIZE = nf.md_arrow_expand --[[ '󰊓' ]]
 local GLYPH_MOVE = nf.md_cursor_move --[[ '󰆾' ]]
 local GLYPH_COPY = nf.md_content_copy --[[ '󰆏' ]]
 local GLYPH_SEARCH = nf.md_magnify --[[ '󰍉' ]]
-local GLYPH_ADMIN = nf.md_shield_half_full --[[ '󰞀' ]]
+local GLYPH_ADMIN = nf.md_shield --[[ '󰒘' ]]
 local GLYPH_DOT_SEPARATOR = nf.oct_dot_fill --[[ '' ]]
 
 ---@type table<string, {icon: string, label: string}>
 local MODE_MAP = {
-   resize_pane = { icon = GLYPH_RESIZE, label = 'RESIZE' },
-   move_tab = { icon = GLYPH_MOVE, label = 'MOVE' },
-   copy_mode = { icon = GLYPH_COPY, label = 'COPY' },
-   search_mode = { icon = GLYPH_SEARCH, label = 'SEARCH' },
+   resize_pane = { icon = GLYPH_RESIZE, label = 'resize' },
+   move_tab = { icon = GLYPH_MOVE, label = 'move' },
+   copy_mode = { icon = GLYPH_COPY, label = 'copy' },
+   search_mode = { icon = GLYPH_SEARCH, label = 'search' },
 }
 
 ---@type table<string, Cells.SegmentColors>
 local colors = {
    default = { bg = '#2a2a2a', fg = '#dcdcdc' },
    scircle = { bg = '#191919', fg = '#2a2a2a' },
-   context = { bg = '#191919', fg = '#727272' },
+   context = { bg = '#191919', fg = '#707070' },
    admin = { bg = '#191919', fg = '#d6caab' },
 }
 
@@ -38,32 +38,25 @@ local cells = Cells:new()
 cells
    :add_segment(
       'scircle_left',
-      GLYPH_SEMI_CIRCLE_LEFT,
+      ' ' .. GLYPH_SEMI_CIRCLE_LEFT,
       colors.scircle,
       attr(attr.intensity('Bold'))
    )
-   :add_segment(
-      'mode_icon',
-      ' ' .. GLYPH_DEFAULT_MODE,
-      colors.default,
-      attr(attr.intensity('Bold'))
-   )
-   :add_segment('mode_label', ' NORMAL ', colors.default, attr(attr.intensity('Bold')))
+   :add_segment('mode_icon', GLYPH_DEFAULT_MODE, colors.default, attr(attr.intensity('Bold')))
+   :add_segment('mode_label', 'noid', colors.default, attr(attr.intensity('Bold')))
    :add_segment(
       'scircle_right',
-      GLYPH_SEMI_CIRCLE_RIGHT,
+      GLYPH_SEMI_CIRCLE_RIGHT .. ' ',
       colors.scircle,
       attr(attr.intensity('Bold'))
    )
-   :add_segment('separator_1', ' ', colors.context)
    :add_segment('workspace_text', '', colors.context, attr(attr.intensity('Bold')))
-   :add_segment('separator_2', ' ' .. GLYPH_DOT_SEPARATOR .. ' ', colors.context)
+   :add_segment('separator', ' ' .. GLYPH_DOT_SEPARATOR .. ' ', colors.context)
    :add_segment('domain_text', '', colors.context, attr(attr.intensity('Bold')))
    :add_segment('admin', '', colors.admin)
-   :add_segment('tail_space', ' ', colors.context)
 
-local function safe_upper(text)
-   return string.upper(text or '')
+local function safe_lower(text)
+   return string.lower(text or '')
 end
 
 local function truncate(text, max_len)
@@ -77,11 +70,11 @@ end
 ---@return string, string
 local function resolve_mode(window)
    if window:leader_is_active() then
-      return GLYPH_LEADER, 'LEADER'
+      return GLYPH_LEADER, 'lead'
    end
 
    if window:composition_status() then
-      return GLYPH_LEADER, 'COMPOSE'
+      return GLYPH_LEADER, 'comp'
    end
 
    local key_table = window:active_key_table()
@@ -90,10 +83,10 @@ local function resolve_mode(window)
       if mode then
          return mode.icon, mode.label
       end
-      return GLYPH_LEADER, safe_upper(key_table)
+      return GLYPH_LEADER, safe_lower(key_table)
    end
 
-   return GLYPH_DEFAULT_MODE, 'NORMAL'
+   return GLYPH_DEFAULT_MODE, 'noid'
 end
 
 ---@param pane Pane
@@ -118,8 +111,8 @@ M.setup = function()
       local admin = is_admin_context(pane) and (' ' .. GLYPH_ADMIN) or ''
 
       cells
-         :update_segment_text('mode_icon', ' ' .. mode_icon)
-         :update_segment_text('mode_label', ' ' .. mode_label .. ' ')
+         :update_segment_text('mode_icon', mode_icon)
+         :update_segment_text('mode_label', ' ' .. mode_label)
          :update_segment_text('workspace_text', workspace)
          :update_segment_text('domain_text', domain)
          :update_segment_text('admin', admin)
@@ -129,12 +122,10 @@ M.setup = function()
          'mode_icon',
          'mode_label',
          'scircle_right',
-         'separator_1',
          'workspace_text',
-         'separator_2',
+         'separator',
          'domain_text',
          'admin',
-         'tail_space',
       })
 
       window:set_left_status(wezterm.format(res))

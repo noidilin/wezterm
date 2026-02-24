@@ -41,7 +41,7 @@ local scheme = {
          bg_color = palette.mono04,
          fg_color = palette.mono19,
          intensity = 'Bold',
-         underline = 'Single',
+         underline = 'None',
          italic = false,
          strikethrough = false,
       },
