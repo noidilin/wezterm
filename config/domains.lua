@@ -10,8 +10,8 @@ local options = {
          remote_address = 'localhost',
          multiplexing = 'None',
          default_prog = { 'fish', '-l' },
-         assume_shell = 'Posix'
-      }
+         assume_shell = 'Posix',
+      },
    },
 
    -- ref: https://wezfurlong.org/wezterm/multiplexing.html#unix-domains
@@ -29,13 +29,6 @@ if platform.is_win then
          username = 'noid',
          default_cwd = '/home/noid',
          default_prog = { 'nu' },
-      },
-      {
-         name = 'wsl:ubuntu-bash',
-         distribution = 'Ubuntu',
-         username = 'kevin',
-         default_cwd = '/home/kevin',
-         default_prog = { 'bash', '-l' },
       },
    }
 end
