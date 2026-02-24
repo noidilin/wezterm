@@ -11,12 +11,15 @@ local M = {}
 ---@type table<number, boolean>
 local bell_tabs = {}
 
-local GLYPH_CIRCLE_OUTLINE = nf.cod_circle_large --[[  ]]
-local GLYPH_CIRCLE_FILLED = nf.cod_circle_large_filled --[[  ]]
+local GLYPH_ACTIVE = nf.fa_caret_down --[[  ]]
+local GLYPH_INACTIVE = nf.fa_angle_down --[[  ]]
+local GLYPH_UNSEEN = nf.fa_angle_double_down --[[  ]]
+
 local GLYPH_DEBUG = nf.md_bug_outline --[[ 󰨰 ]]
 local GLYPH_SEARCH = nf.cod_search_fuzzy --[[  ]]
 local GLYPH_ZOOM = ' '
 local GLYPH_BELL = ' '
+
 local GLYPH_PROGRESS_ICONS = { '󰪞', '󰪟', '󰪠', '󰪡', '󰪢', '󰪣', '󰪤', '󰪥' }
 local GLYPH_PROGRESS_ERROR = ' '
 local GLYPH_PROGRESS_INDETERMINATE = ' 󰪡'
@@ -43,9 +46,9 @@ local colors = {
    text_hover            = { bg = '#191919', fg = '#555555' },
    text_active           = { bg = '#191919', fg = '#9d9d9d' },
 
-   unseen_output_default = { bg = '#191919', fg = '#414141' },
-   unseen_output_hover   = { bg = '#191919', fg = '#555555' },
-   unseen_output_active  = { bg = '#191919', fg = '#9d9d9d' },
+   state_default         = { bg = '#191919', fg = '#414141' },
+   state_hover           = { bg = '#191919', fg = '#555555' },
+   state_active          = { bg = '#191919', fg = '#9d9d9d' },
 
    zoom_default          = { bg = '#191919', fg = '#414141' },
    zoom_hover            = { bg = '#191919', fg = '#555555' },
@@ -276,8 +279,8 @@ end
 function Tab:create_cells()
    local attr = self.cells.attr
    self.cells
+      :add_segment('state', ' ' .. GLYPH_INACTIVE)
       :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
-      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE_FILLED)
       :add_segment('zoom', '')
       :add_segment('attention', '')
       :add_segment('progress', '')
@@ -294,19 +297,21 @@ end
 ---@param hover boolean
 function Tab:update_cells(is_active, hover)
    local tab_state = 'default'
+   local state_glyph = GLYPH_INACTIVE
+
    if is_active then
       tab_state = 'active'
+      state_glyph = GLYPH_ACTIVE
    elseif hover then
       tab_state = 'hover'
    end
 
-   self.cells:update_segment_text('title', ' ' .. self.title)
-
-   if self.unseen_output then
-      self.cells:update_segment_text('unseen_output', ' ' .. GLYPH_CIRCLE_FILLED)
-   else
-      self.cells:update_segment_text('unseen_output', ' ' .. ' ')
+   if not is_active and self.unseen_output then
+      state_glyph = GLYPH_UNSEEN
    end
+
+   self.cells:update_segment_text('state', ' ' .. state_glyph)
+   self.cells:update_segment_text('title', ' ' .. self.title)
 
    if self.is_zoomed then
       self.cells:update_segment_text('zoom', GLYPH_ZOOM)
@@ -323,8 +328,8 @@ function Tab:update_cells(is_active, hover)
    self.cells:update_segment_text('progress', self.progress_text)
 
    self.cells
+      :update_segment_colors('state', colors['state_' .. tab_state])
       :update_segment_colors('title', colors['text_' .. tab_state])
-      :update_segment_colors('unseen_output', colors['unseen_output_' .. tab_state])
       :update_segment_colors('zoom', colors['zoom_' .. tab_state])
       :update_segment_colors('attention', colors['attention_' .. tab_state])
       :update_segment_colors('progress', colors['progress_' .. tab_state])
@@ -338,8 +343,8 @@ end
 ---@return FormatItem[] (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
 function Tab:render()
    return self.cells:render({
+      'state',
       'title',
-      'unseen_output',
       'zoom',
       'attention',
       'progress',
