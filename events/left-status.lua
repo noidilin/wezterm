@@ -29,9 +29,9 @@ local MODE_MAP = {
 local colors = {
    default = { bg = '#2a2a2a', fg = '#dcdcdc' },
    scircle = { bg = '#191919', fg = '#2a2a2a' },
-   context = { bg = '#191919', fg = '#707070' },
+   context = { bg = '#191919', fg = '#686868' },
    admin = { bg = '#191919', fg = '#d6caab' },
-   wsl = { bg = '#191919', fg = '#8aa8ba' },
+   wsl = { bg = '#191919', fg = '#7d96ad' },
 }
 
 local cells = Cells:new()
@@ -56,6 +56,7 @@ cells
    :add_segment('domain_text', '', colors.context)
    :add_segment('admin', '', colors.admin)
    :add_segment('wsl', '', colors.wsl)
+   :add_segment('padding', ' |', colors.context, attr(attr.intensity('Bold')))
 
 local function safe_lower(text)
    return string.lower(text or '')
@@ -152,6 +153,7 @@ M.setup = function()
          'domain_text',
          'admin',
          'wsl',
+         'padding',
       })
 
       window:set_left_status(wezterm.format(res))
