@@ -1,16 +1,7 @@
-<h2 align="center">My WezTerm Config</h2>
+# WezTerm Config
 
-<p align="center">
-  <a href="https://github.com/KevinSilvester/wezterm-config/stargazers">
-    <img alt="Stargazers" src="https://img.shields.io/github/stars/KevinSilvester/wezterm-config?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41">
-  </a>
-  <a href="https://github.com/KevinSilvester/wezterm-config/issues">
-    <img alt="Issues" src="https://img.shields.io/github/issues/KevinSilvester/wezterm-config?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
-  </a>
-  <a href="https://github.com/KevinSilvester/wezterm-config/actions/workflows/lint.yml">
-    <img alt="Build" src="https://img.shields.io/github/actions/workflow/status/KevinSilvester/wezterm-config/lint.yml?&style=for-the-badge&logo=githubactions&label=CI&color=A6E3A1&logoColor=D9E0EE&labelColor=302D41">
-  </a>
-</p>
+This is a forked repo from the great [KevinSilvester/wezterm-config: My WezTerm Config](https://github.com/KevinSilvester/wezterm-config).
+I have migrated the visual language from [GrzegorzKozub/wezterm](https://github.com/GrzegorzKozub/wezterm) with my own color palette.
 
 ![screenshot](./.github/screenshots/wezterm.gif)
 
@@ -34,13 +25,13 @@
 
   GPU + Adapter combo is selected based on the following criteria:
 
-  1.  <details>
+  1. <details>
       <summary>Best GPU available</summary>
 
       `Discrete` > `Integrated` > `Other` (for `wgpu`'s OpenGl implementation on Discrete GPU) > `Cpu`
       </details>
 
-  2.  <details>
+  2. <details>
       <summary>Best graphics API available (based off my very scientific scroll a big log file in Neovim test 😁)</summary>
 
       > :bulb:<br>
@@ -59,7 +50,7 @@
 
 ### Getting Started
 
-- ##### Requirements:
+- ##### Requirements
 
   - <details>
       <summary><b>WezTerm</b></summary>
@@ -99,6 +90,7 @@
         ```sh
         choco install wezterm -y
         ```
+
       </details>
 
     - <details>
@@ -117,6 +109,7 @@
         scoop bucket add k https://github.com/KevinSilvester/scoop-bucket
         scoop install k/wezterm-nightly
         ```
+
       </details>
 
     > :bulb:<br>
@@ -142,6 +135,7 @@
         sudo port selfupdate
         sudo port install wezterm
         ```
+
       </details>
 
     - <details>
@@ -158,6 +152,7 @@
         ```sh
         brew install --cask wezterm@nightly --no-quarantine --greedy-latest
         ```
+
       </details>
 
     ---
@@ -194,17 +189,18 @@
 
 &nbsp;
 
-- ##### Steps:
+- ##### Steps
 
-  1.  ```sh
+  1. ```sh
       # On Windows and Unix systems
       git clone https://github.com/KevinSilvester/wezterm-config.git ~/.config/wezterm
       ```
-  2.  And Done!!! 🎉🎉
+
+  2. And Done!!! 🎉🎉
 
 &nbsp;
 
-- ##### Things You Might Want to Change:
+- ##### Things You Might Want to Change
 
   - [./config/domains.lua](./config/domains.lua) for custom SSH/WSL domains
   - [./config/launch.lua](./config/launch.lua) for preferred shells and its paths
