@@ -2,6 +2,7 @@
 
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
+local palette = require('colors._palette')
 
 -- Constants and icons
 local nf = wezterm.nerdfonts
@@ -42,25 +43,25 @@ local SHELL_PROCESSES = {
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
-   text_default          = { bg = '#191919', fg = '#414141' },
-   text_hover            = { bg = '#191919', fg = '#555555' },
-   text_active           = { bg = '#191919', fg = '#9d9d9d' },
+   text_default          = { bg = palette.mono02, fg = palette.mono09 },
+   text_hover            = { bg = palette.mono02, fg = palette.mono12 },
+   text_active           = { bg = palette.mono02, fg = palette.mono19 },
 
-   state_default         = { bg = '#191919', fg = '#414141' },
-   state_hover           = { bg = '#191919', fg = '#555555' },
-   state_active          = { bg = '#191919', fg = '#9d9d9d' },
+   state_default         = { bg = palette.mono02, fg = palette.mono09 },
+   state_hover           = { bg = palette.mono02, fg = palette.mono12 },
+   state_active          = { bg = palette.mono02, fg = palette.mono19 },
 
-   zoom_default          = { bg = '#191919', fg = '#414141' },
-   zoom_hover            = { bg = '#191919', fg = '#555555' },
-   zoom_active           = { bg = '#191919', fg = '#9d9d9d' },
+   zoom_default          = { bg = palette.mono02, fg = palette.mono09 },
+   zoom_hover            = { bg = palette.mono02, fg = palette.mono12 },
+   zoom_active           = { bg = palette.mono02, fg = palette.mono19 },
 
-   attention_default     = { bg = '#191919', fg = '#d6caab' },
-   attention_hover       = { bg = '#191919', fg = '#ebd6b7' },
-   attention_active      = { bg = '#191919', fg = '#ebd6b7' },
+   attention_default     = { bg = palette.mono02, fg = palette.yellow00 },
+   attention_hover       = { bg = palette.mono02, fg = palette.yellow01 },
+   attention_active      = { bg = palette.mono02, fg = palette.yellow01 },
 
-   progress_default      = { bg = '#191919', fg = '#414141' },
-   progress_hover        = { bg = '#191919', fg = '#555555' },
-   progress_active       = { bg = '#191919', fg = '#9d9d9d' },
+   progress_default      = { bg = palette.mono02, fg = palette.mono09 },
+   progress_hover        = { bg = palette.mono02, fg = palette.mono12 },
+   progress_active       = { bg = palette.mono02, fg = palette.mono19 },
 }
 
 -- Helper functions
@@ -197,17 +198,17 @@ local function get_progress_display(pane)
 
    if type(progress) == 'table' then
       if type(progress.Percentage) == 'number' then
-         return ' ' .. progress_icon(progress.Percentage), '#778777'
+         return ' ' .. progress_icon(progress.Percentage), palette.green00
       end
 
       if progress.Error ~= nil then
          if type(progress.Error) == 'number' then
-            return ' ' .. progress_icon(progress.Error), '#b07878'
+            return ' ' .. progress_icon(progress.Error), palette.red00
          end
-         return GLYPH_PROGRESS_ERROR, '#b07878'
+         return GLYPH_PROGRESS_ERROR, palette.red00
       end
    elseif progress == 'Indeterminate' then
-      return GLYPH_PROGRESS_INDETERMINATE, '#7d96ad'
+      return GLYPH_PROGRESS_INDETERMINATE, palette.blue00
    end
 
    return '', nil
@@ -363,7 +364,7 @@ M.setup = function()
       window:perform_action(
          wezterm.action.PromptInputLine({
             description = wezterm.format({
-               { Foreground = { Color = '#FFFFFF' } },
+               { Foreground = { Color = palette.mono25 } },
                { Attribute = { Intensity = 'Bold' } },
                { Text = 'Enter new name for tab' },
             }),

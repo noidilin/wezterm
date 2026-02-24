@@ -1,6 +1,7 @@
 local wezterm = require('wezterm')
 local umath = require('utils.math')
 local Cells = require('utils.cells')
+local palette = require('colors._palette')
 
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
@@ -44,8 +45,8 @@ local charging_icons = {
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
-   mem      = { fg = '#555555', bg = '#191919' },
-   battery   = { fg = '#555555', bg = '#191919' },
+   mem      = { fg = palette.mono12, bg = palette.mono02 },
+   battery   = { fg = palette.mono12, bg = palette.mono02 },
 }
 
 local cells = Cells:new()

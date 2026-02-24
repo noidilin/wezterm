@@ -1,5 +1,6 @@
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
+local palette = require('colors._palette')
 
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
@@ -27,11 +28,11 @@ local MODE_MAP = {
 
 ---@type table<string, Cells.SegmentColors>
 local colors = {
-   default = { bg = '#2a2a2a', fg = '#dcdcdc' },
-   scircle = { bg = '#191919', fg = '#2a2a2a' },
-   context = { bg = '#191919', fg = '#686868' },
-   admin = { bg = '#191919', fg = '#d6caab' },
-   wsl = { bg = '#191919', fg = '#7d96ad' },
+   default = { bg = palette.mono05, fg = palette.mono24 },
+   scircle = { bg = palette.mono02, fg = palette.mono05 },
+   context = { bg = palette.mono02, fg = palette.mono14 },
+   admin = { bg = palette.mono02, fg = palette.yellow00 },
+   wsl = { bg = palette.mono02, fg = palette.blue00 },
 }
 
 local cells = Cells:new()
