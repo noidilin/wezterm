@@ -15,7 +15,7 @@ local GLYPH_MOVE = nf.md_cursor_move --[[ '󰆾' ]]
 local GLYPH_COPY = nf.md_content_copy --[[ '󰆏' ]]
 local GLYPH_SEARCH = nf.md_magnify --[[ '󰍉' ]]
 local GLYPH_ADMIN = nf.md_shield --[[ '󰒘' ]]
-local GLYPH_DOT_SEPARATOR = nf.oct_dot_fill --[[ '' ]]
+local GLYPH_WSL = nf.md_arch --[[ '󰣇' ]]
 
 ---@type table<string, {icon: string, label: string}>
 local MODE_MAP = {
@@ -31,6 +31,7 @@ local colors = {
    scircle = { bg = '#191919', fg = '#2a2a2a' },
    context = { bg = '#191919', fg = '#707070' },
    admin = { bg = '#191919', fg = '#d6caab' },
+   wsl = { bg = '#191919', fg = '#8aa8ba' },
 }
 
 local cells = Cells:new()
@@ -50,10 +51,11 @@ cells
       colors.scircle,
       attr(attr.intensity('Bold'))
    )
-   :add_segment('workspace_text', '', colors.context, attr(attr.intensity('Bold')))
-   :add_segment('separator', ' ' .. GLYPH_DOT_SEPARATOR .. ' ', colors.context)
-   :add_segment('domain_text', '', colors.context, attr(attr.intensity('Bold')))
+   :add_segment('workspace_text', '', colors.context)
+   :add_segment('separator', ' ', colors.context)
+   :add_segment('domain_text', '', colors.context)
    :add_segment('admin', '', colors.admin)
+   :add_segment('wsl', '', colors.wsl)
 
 local function safe_lower(text)
    return string.lower(text or '')
@@ -64,6 +66,13 @@ local function truncate(text, max_len)
       return text
    end
    return text:sub(1, max_len - 1) .. '…'
+end
+
+---@param proc string
+---@return string
+local function clean_process_name(proc)
+   local a = string.gsub(proc, '(.*[/\\])(.*)', '%2')
+   return a:gsub('%.exe$', '')
 end
 
 ---@param window Window
@@ -103,12 +112,27 @@ local function is_admin_context(pane)
    return title:match('^Administrator: ') ~= nil or title:match('%(Admin%)') ~= nil
 end
 
+---@param pane Pane
+---@return boolean
+local function is_wsl_context(pane)
+   local ok, process_name = pcall(function()
+      return pane:get_foreground_process_name()
+   end)
+
+   if not ok or type(process_name) ~= 'string' or process_name == '' then
+      return false
+   end
+
+   return clean_process_name(process_name):match('^wsl') ~= nil
+end
+
 M.setup = function()
    wezterm.on('update-right-status', function(window, pane)
       local mode_icon, mode_label = resolve_mode(window)
       local workspace = truncate(wezterm.mux.get_active_workspace() or 'default', 18)
       local domain = truncate(pane:get_domain_name() or 'local', 22)
       local admin = is_admin_context(pane) and (' ' .. GLYPH_ADMIN) or ''
+      local wsl = is_wsl_context(pane) and (' ' .. GLYPH_WSL) or ''
 
       cells
          :update_segment_text('mode_icon', mode_icon)
@@ -116,6 +140,7 @@ M.setup = function()
          :update_segment_text('workspace_text', workspace)
          :update_segment_text('domain_text', domain)
          :update_segment_text('admin', admin)
+         :update_segment_text('wsl', wsl)
 
       local res = cells:render({
          'scircle_left',
@@ -126,6 +151,7 @@ M.setup = function()
          'separator',
          'domain_text',
          'admin',
+         'wsl',
       })
 
       window:set_left_status(wezterm.format(res))
