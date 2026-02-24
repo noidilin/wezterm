@@ -11,7 +11,8 @@ local M = {}
 ---@type table<number, boolean>
 local bell_tabs = {}
 
-local GLYPH_CIRCLE = nf.cod_circle_filled --[[  ]]
+local GLYPH_CIRCLE_OUTLINE = nf.cod_circle_large --[[  ]]
+local GLYPH_CIRCLE_FILLED = nf.cod_circle_large_filled --[[  ]]
 local GLYPH_DEBUG = nf.md_bug_outline --[[ 󰨰 ]]
 local GLYPH_SEARCH = nf.cod_search_fuzzy --[[  ]]
 local GLYPH_ZOOM = ' '
@@ -19,10 +20,9 @@ local GLYPH_BELL = ' '
 local GLYPH_PROGRESS_ICONS = { '󰪞', '󰪟', '󰪠', '󰪡', '󰪢', '󰪣', '󰪤', '󰪥' }
 local GLYPH_PROGRESS_ERROR = ' '
 local GLYPH_PROGRESS_INDETERMINATE = ' 󰪡'
-local NBSP = '\u{00A0}'
+
 local TAB_TITLE_BUDGET = 20
 local RESERVED_STATE_INSET = 4
-
 local TITLE_INSET = 5
 
 local SHELL_PROCESSES = {
@@ -35,16 +35,6 @@ local SHELL_PROCESSES = {
    cmd = true,
    cmd64 = true,
 }
-
-local RENDER_VARIANTS = {
-   'title',
-   'unseen_output',
-   'zoom',
-   'attention',
-   'progress',
-   'padding',
-}
-
 
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
@@ -160,7 +150,7 @@ local function create_title(process_name, base_title, max_width, inset)
       title = truncate_with_ellipsis(title, text_width)
    else
       local padding = text_width - title_width
-      title = title .. string.rep(NBSP, padding)
+      title = title .. string.rep(' ', padding)
    end
 
    return title
@@ -287,7 +277,7 @@ function Tab:create_cells()
    local attr = self.cells.attr
    self.cells
       :add_segment('title', ' ', nil, attr(attr.intensity('Bold')))
-      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE)
+      :add_segment('unseen_output', ' ' .. GLYPH_CIRCLE_FILLED)
       :add_segment('zoom', '')
       :add_segment('attention', '')
       :add_segment('progress', '')
@@ -313,9 +303,9 @@ function Tab:update_cells(is_active, hover)
    self.cells:update_segment_text('title', ' ' .. self.title)
 
    if self.unseen_output then
-      self.cells:update_segment_text('unseen_output', ' ' .. GLYPH_CIRCLE)
+      self.cells:update_segment_text('unseen_output', ' ' .. GLYPH_CIRCLE_FILLED)
    else
-      self.cells:update_segment_text('unseen_output', NBSP .. NBSP)
+      self.cells:update_segment_text('unseen_output', ' ' .. ' ')
    end
 
    if self.is_zoomed then
@@ -327,7 +317,7 @@ function Tab:update_cells(is_active, hover)
    if self.has_bell then
       self.cells:update_segment_text('attention', GLYPH_BELL)
    else
-      self.cells:update_segment_text('attention', NBSP .. NBSP)
+      self.cells:update_segment_text('attention', ' ' .. ' ')
    end
 
    self.cells:update_segment_text('progress', self.progress_text)
@@ -347,7 +337,14 @@ end
 
 ---@return FormatItem[] (ref: https://wezfurlong.org/wezterm/config/lua/wezterm/format.html)
 function Tab:render()
-   return self.cells:render(RENDER_VARIANTS)
+   return self.cells:render({
+      'title',
+      'unseen_output',
+      'zoom',
+      'attention',
+      'progress',
+      'padding',
+   })
 end
 
 ---@type Tab[]
