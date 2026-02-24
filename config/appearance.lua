@@ -40,15 +40,17 @@ return {
    -- window
    window_decorations = 'RESIZE',
    window_padding = {
-      left = 10,
-      right = 10,
-      top = 10,
-      bottom = 10,
+      left = '1cell',
+      right = '1cell',
+      top = '0.25cell',
+      bottom = '0.25cell',
    },
    adjust_window_size_when_changing_font_size = false,
    window_close_confirmation = 'NeverPrompt',
    window_frame = {
-      active_titlebar_bg = '#090909',
+      border_top_height = '0.5cell',
+
+      -- active_titlebar_bg = '#090909',
       -- font = fonts.font,
       -- font_size = fonts.font_size,
    },
