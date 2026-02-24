@@ -19,6 +19,9 @@ local GLYPH_BELL = ' '
 local GLYPH_PROGRESS_ICONS = { '󰪞', '󰪟', '󰪠', '󰪡', '󰪢', '󰪣', '󰪤', '󰪥' }
 local GLYPH_PROGRESS_ERROR = ' '
 local GLYPH_PROGRESS_INDETERMINATE = ' 󰪡'
+local NBSP = '\u{00A0}'
+local TAB_TITLE_BUDGET = 20
+local RESERVED_STATE_INSET = 4
 
 local TITLE_INSET = 5
 
@@ -52,19 +55,19 @@ local colors = {
 
    unseen_output_default = { bg = '#191919', fg = '#414141' },
    unseen_output_hover   = { bg = '#191919', fg = '#555555' },
-   unseen_output_active  = { bg = '#2a2a2a', fg = '#9d9d9d' },
+   unseen_output_active  = { bg = '#191919', fg = '#9d9d9d' },
 
    zoom_default          = { bg = '#191919', fg = '#414141' },
    zoom_hover            = { bg = '#191919', fg = '#555555' },
-   zoom_active           = { bg = '#2a2a2a', fg = '#9d9d9d' },
+   zoom_active           = { bg = '#191919', fg = '#9d9d9d' },
 
    attention_default     = { bg = '#191919', fg = '#d6caab' },
    attention_hover       = { bg = '#191919', fg = '#ebd6b7' },
-   attention_active      = { bg = '#2a2a2a', fg = '#ebd6b7' },
+   attention_active      = { bg = '#191919', fg = '#ebd6b7' },
 
    progress_default      = { bg = '#191919', fg = '#414141' },
    progress_hover        = { bg = '#191919', fg = '#555555' },
-   progress_active       = { bg = '#2a2a2a', fg = '#9d9d9d' },
+   progress_active       = { bg = '#191919', fg = '#9d9d9d' },
 }
 
 -- Helper functions
@@ -120,15 +123,15 @@ end
 ---@param value string
 ---@param max_len number
 local function truncate_with_ellipsis(value, max_len)
-   if value:len() <= max_len then
+   if wezterm.column_width(value) <= max_len then
       return value
    end
 
    if max_len <= 3 then
-      return value:sub(1, max_len)
+      return wezterm.truncate_right(value, max_len)
    end
 
-   return value:sub(1, max_len - 3) .. '...'
+   return wezterm.truncate_right(value, max_len - 3) .. '...'
 end
 
 ---@param process_name string
@@ -137,7 +140,7 @@ end
 ---@param inset number
 local function create_title(process_name, base_title, max_width, inset)
    local title = cwd_label_from_title(base_title)
-   if process_name:len() > 0 and not is_shell_process(process_name) then
+   if process_name ~= '' and not is_shell_process(process_name) then
       title = process_name
    end
 
@@ -152,11 +155,12 @@ local function create_title(process_name, base_title, max_width, inset)
    end
 
    local text_width = math.max(0, max_width - inset)
-   if title:len() > text_width then
+   local title_width = wezterm.column_width(title)
+   if title_width > text_width then
       title = truncate_with_ellipsis(title, text_width)
    else
-      local padding = text_width - title:len()
-      title = title .. string.rep(' ', padding)
+      local padding = text_width - title_width
+      title = title .. string.rep(NBSP, padding)
    end
 
    return title
@@ -250,6 +254,7 @@ end
 ---@param max_width number
 function Tab:set_info(tab, max_width)
    local process_name = clean_process_name(tab.active_pane.foreground_process_name)
+   local title_budget = math.min(max_width, TAB_TITLE_BUDGET)
 
    self.unseen_output = false
    self.has_bell = bell_tabs[tab.tab_id] == true
@@ -261,15 +266,9 @@ function Tab:set_info(tab, max_width)
    end
 
    local inset = TITLE_INSET
-   if self.unseen_output then
-      inset = inset + 2
-   end
+   inset = inset + RESERVED_STATE_INSET
 
    if self.is_zoomed then
-      inset = inset + 2
-   end
-
-   if self.has_bell then
       inset = inset + 2
    end
 
@@ -278,10 +277,10 @@ function Tab:set_info(tab, max_width)
    end
 
    if self.title_locked then
-      self.title = create_title('', self.locked_title, max_width, inset)
+      self.title = create_title('', self.locked_title, title_budget, inset)
       return
    end
-   self.title = create_title(process_name, tab.active_pane.title, max_width, inset)
+   self.title = create_title(process_name, tab.active_pane.title, title_budget, inset)
 end
 
 function Tab:create_cells()
@@ -313,8 +312,10 @@ function Tab:update_cells(is_active, hover)
 
    self.cells:update_segment_text('title', ' ' .. self.title)
 
-   if not self.unseen_output then
-      self.cells:update_segment_text('unseen_output', '')
+   if self.unseen_output then
+      self.cells:update_segment_text('unseen_output', ' ' .. GLYPH_CIRCLE)
+   else
+      self.cells:update_segment_text('unseen_output', NBSP .. NBSP)
    end
 
    if self.is_zoomed then
@@ -326,7 +327,7 @@ function Tab:update_cells(is_active, hover)
    if self.has_bell then
       self.cells:update_segment_text('attention', GLYPH_BELL)
    else
-      self.cells:update_segment_text('attention', '')
+      self.cells:update_segment_text('attention', NBSP .. NBSP)
    end
 
    self.cells:update_segment_text('progress', self.progress_text)
