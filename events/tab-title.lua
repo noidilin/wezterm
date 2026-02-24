@@ -89,8 +89,26 @@ local TITLE_INSET = {
 }
 
 local RENDER_VARIANTS = {
-   { 'scircle_left', 'title', 'unseen_output', 'zoom', 'attention', 'progress', 'padding', 'scircle_right' },
-   { 'scircle_left', 'title', 'unseen_output', 'zoom', 'attention', 'progress', 'padding', 'scircle_right' },
+   {
+      'scircle_left',
+      'title',
+      'unseen_output',
+      'zoom',
+      'attention',
+      'progress',
+      'padding',
+      'scircle_right',
+   },
+   {
+      'scircle_left',
+      'title',
+      'unseen_output',
+      'zoom',
+      'attention',
+      'progress',
+      'padding',
+      'scircle_right',
+   },
    {
       'scircle_left',
       'admin',
@@ -143,7 +161,7 @@ local RENDER_VARIANTS = {
 local colors = {
    text_default          = { bg = '#191919', fg = '#414141' },
    text_hover            = { bg = '#191919', fg = '#555555' },
-   text_active           = { bg = '#2a2a2a', fg = '#9d9d9d' },
+   text_active           = { bg = '#191919', fg = '#9d9d9d' },
 
    unseen_output_default = { bg = '#191919', fg = '#414141' },
    unseen_output_hover   = { bg = '#191919', fg = '#555555' },
@@ -163,9 +181,7 @@ local colors = {
 
    scircle_default       = { bg = '#191919', fg = '#191919' },
    scircle_hover         = { bg = '#191919', fg = '#191919' },
-   scircle_active        = { bg = '#191919', fg = '#2a2a2a' },
-
-
+   scircle_active        = { bg = '#191919', fg = '#191919' }, -- fg decide visual color
 }
 
 ---
