@@ -20,7 +20,18 @@ local GLYPH_PROGRESS_ICONS = { '󰪞', '󰪟', '󰪠', '󰪡', '󰪢', '󰪣', '
 local GLYPH_PROGRESS_ERROR = ' '
 local GLYPH_PROGRESS_INDETERMINATE = ' 󰪡'
 
-local TITLE_INSET = 6
+local TITLE_INSET = 5
+
+local SHELL_PROCESSES = {
+   nu = true,
+   bash = true,
+   zsh = true,
+   fish = true,
+   pwsh = true,
+   powershell = true,
+   cmd = true,
+   cmd64 = true,
+}
 
 local RENDER_VARIANTS = {
    'title',
@@ -64,16 +75,70 @@ local function clean_process_name(proc)
 end
 
 ---@param process_name string
+local function is_shell_process(process_name)
+   return SHELL_PROCESSES[process_name:lower()] == true
+end
+
+---@param value string
+local function compact_path_label(value)
+   local normalized = value:gsub('\\', '/'):gsub('/+$', '')
+   if normalized == '' then
+      return value
+   end
+   if normalized == '~' then
+      return '~'
+   end
+
+   local leaf = normalized:match('([^/]+)$')
+   if leaf and leaf ~= '' then
+      return leaf
+   end
+   return normalized
+end
+
+---@param base_title string
+local function cwd_label_from_title(base_title)
+   local sanitized = base_title:gsub('^Administrator:%s*', ''):gsub('%s*%(Admin%)%s*$', '')
+
+   local unix_like_path = sanitized:match('([~./][^%s]*)$')
+   if unix_like_path then
+      return compact_path_label(unix_like_path)
+   end
+
+   local windows_path = sanitized:match('([A-Za-z]:[\\/][^%s]*)$')
+   if windows_path then
+      return compact_path_label(windows_path)
+   end
+
+   if sanitized:find('/') or sanitized:find('\\') then
+      return compact_path_label(sanitized)
+   end
+
+   return sanitized
+end
+
+---@param value string
+---@param max_len number
+local function truncate_with_ellipsis(value, max_len)
+   if value:len() <= max_len then
+      return value
+   end
+
+   if max_len <= 3 then
+      return value:sub(1, max_len)
+   end
+
+   return value:sub(1, max_len - 3) .. '...'
+end
+
+---@param process_name string
 ---@param base_title string
 ---@param max_width number
 ---@param inset number
 local function create_title(process_name, base_title, max_width, inset)
-   local title
-
-   if process_name:len() > 0 then
-      title = process_name .. ' ~ ' .. base_title
-   else
-      title = base_title
+   local title = cwd_label_from_title(base_title)
+   if process_name:len() > 0 and not is_shell_process(process_name) then
+      title = process_name
    end
 
    if base_title == 'Debug' then
@@ -86,11 +151,11 @@ local function create_title(process_name, base_title, max_width, inset)
       inset = inset - 2
    end
 
-   if title:len() > max_width - inset then
-      local diff = title:len() - max_width + inset
-      title = title:sub(1, title:len() - diff)
+   local text_width = math.max(0, max_width - inset)
+   if title:len() > text_width then
+      title = truncate_with_ellipsis(title, text_width)
    else
-      local padding = max_width - title:len() - inset
+      local padding = text_width - title:len()
       title = title .. string.rep(' ', padding)
    end
 
@@ -288,7 +353,6 @@ end
 local tab_list = {}
 
 M.setup = function()
-
    -- CUSTOM EVENT
    -- Event listener to manually update the tab name
    -- Tab name will remain locked until the `reset-tab-title` is triggered
@@ -346,18 +410,18 @@ M.setup = function()
          bell_tabs[tab.tab_id] = nil
       end
 
-       if not tab_list[tab.tab_id] then
-          tab_list[tab.tab_id] = Tab:new()
-          tab_list[tab.tab_id]:set_info(tab, max_width)
-          tab_list[tab.tab_id]:create_cells()
-          tab_list[tab.tab_id]:update_cells(tab.is_active, hover)
-          return tab_list[tab.tab_id]:render()
-       end
+      if not tab_list[tab.tab_id] then
+         tab_list[tab.tab_id] = Tab:new()
+         tab_list[tab.tab_id]:set_info(tab, max_width)
+         tab_list[tab.tab_id]:create_cells()
+         tab_list[tab.tab_id]:update_cells(tab.is_active, hover)
+         return tab_list[tab.tab_id]:render()
+      end
 
-       tab_list[tab.tab_id]:set_info(tab, max_width)
-       tab_list[tab.tab_id]:update_cells(tab.is_active, hover)
-       return tab_list[tab.tab_id]:render()
-    end)
+      tab_list[tab.tab_id]:set_info(tab, max_width)
+      tab_list[tab.tab_id]:update_cells(tab.is_active, hover)
+      return tab_list[tab.tab_id]:render()
+   end)
 end
 
 return M
