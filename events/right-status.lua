@@ -1,30 +1,18 @@
 local wezterm = require('wezterm')
 local umath = require('utils.math')
 local Cells = require('utils.cells')
-local OptsValidator = require('utils.opts-validator')
-
----@alias Event.RightStatusOptions { date_format?: string }
-
----Setup options for the right status bar
-local EVENT_OPTS = {}
-
----@type OptsSchema
-EVENT_OPTS.schema = {
-   {
-      name = 'date_format',
-      type = 'string',
-      default = '%a %H:%M:%S',
-   },
-}
-EVENT_OPTS.validator = OptsValidator:new(EVENT_OPTS.schema)
 
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
 
 local M = {}
 
-local ICON_SEPARATOR = nf.oct_dash
-local ICON_DATE = nf.fa_calendar
+local memory_cache = {
+   value = 'N/A',
+   last_update_ms = 0,
+}
+
+local ICON_MEMORY = '󰍛'
 
 ---@type string[]
 local discharging_icons = {
@@ -56,19 +44,56 @@ local charging_icons = {
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
-   date      = { fg = '#555555', bg = '#191919' },
+   mem      = { fg = '#555555', bg = '#191919' },
    battery   = { fg = '#555555', bg = '#191919' },
-   separator = { fg = '#474747', bg = '#191919' }
 }
 
 local cells = Cells:new()
 
 cells
-   :add_segment('date_icon', ICON_DATE .. '  ', colors.date, attr(attr.intensity('Bold')))
-   :add_segment('date_text', '', colors.date, attr(attr.intensity('Bold')))
-   :add_segment('separator', ' ' .. ICON_SEPARATOR .. '  ', colors.separator)
+   :add_segment('memory_icon', ICON_MEMORY .. ' ', colors.mem, attr(attr.intensity('Bold')))
+   :add_segment('memory_text', '', colors.mem, attr(attr.intensity('Bold')))
    :add_segment('battery_icon', '', colors.battery)
    :add_segment('battery_text', '', colors.battery, attr(attr.intensity('Bold')))
+
+---@return string
+local function get_memory_usage()
+   -- TODO: support WSL, Arch Linux, and Windows starship paths.
+   local pcall_ok, ok, output, _ = pcall(wezterm.run_child_process, {
+      '/opt/homebrew/bin/starship',
+      'module',
+      'memory_usage',
+   })
+
+   if not pcall_ok or not ok or not output then
+      return 'N/A'
+   end
+
+   local cleaned = output:gsub('\27%[[0-9;]*m', ''):match('^%s*(.-)%s*$')
+   if cleaned == nil or cleaned == '' then
+      return 'N/A'
+   end
+
+   return cleaned
+end
+
+---@param window Window
+---@return boolean
+local function memory_cache_is_stale(window)
+   local now_ms = os.time() * 1000
+   local interval_ms = window:effective_config().status_update_interval
+   return (now_ms - memory_cache.last_update_ms) >= interval_ms
+end
+
+---@param window Window
+local function refresh_memory_cache(window)
+   if not memory_cache_is_stale(window) then
+      return
+   end
+
+   memory_cache.value = get_memory_usage()
+   memory_cache.last_update_ms = os.time() * 1000
+end
 
 ---@return string, string
 local function battery_info()
@@ -91,25 +116,19 @@ local function battery_info()
    return charge, icon .. ' '
 end
 
----@param opts? Event.RightStatusOptions Default: {date_format = '%a %H:%M:%S'}
-M.setup = function(opts)
-   local valid_opts, err = EVENT_OPTS.validator:validate(opts or {})
-
-   if err then
-      wezterm.log_error(err)
-   end
-
+M.setup = function()
    wezterm.on('update-right-status', function(window, _pane)
       local battery_text, battery_icon = battery_info()
+      refresh_memory_cache(window)
 
       cells
-         :update_segment_text('date_text', wezterm.strftime(valid_opts.date_format))
-         :update_segment_text('battery_icon', battery_icon)
-         :update_segment_text('battery_text', battery_text)
+         :update_segment_text('memory_text', memory_cache.value)
+         :update_segment_text('battery_icon', ' ' .. battery_icon)
+         :update_segment_text('battery_text', battery_text .. ' ')
 
       window:set_right_status(
          wezterm.format(
-            cells:render({ 'date_icon', 'date_text', 'separator', 'battery_icon', 'battery_text' })
+            cells:render({ 'memory_icon', 'memory_text', 'battery_icon', 'battery_text' })
          )
       )
    end)
