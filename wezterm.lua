@@ -8,7 +8,7 @@ require('utils.backdrops')
 
 require('events.left-status').setup()
 require('events.right-status').setup()
-require('events.tab-title').setup({ hide_active_tab_unseen = false, unseen_icon = 'numbered_box' })
+require('events.tab-title').setup()
 require('events.new-tab-button').setup()
 require('events.gui-startup').setup()
 
