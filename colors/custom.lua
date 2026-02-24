@@ -1,63 +1,102 @@
--- A slightly altered version of catppucchin mocha
-local colorscheme = {
-  foreground = '#b3b3b3',
-  background = '#191919',
-  compose_cursor = '#9d9d9d',
-  cursor_fg = '#eaeaea',
-  cursor_bg = '#878787',
-  cursor_border = '#878787',
-  selection_bg = '#303030',
-  selection_fg = '#9d9d9d',
-  -- order: black > red > green > yellow > blue > magenta > cyan > white
-  ansi = { '#474747', '#b07878', '#778777', '#d6caab', '#7d96ad', '#797994', '#769494', '#dad5c8' },
-  brights = {
-    '#5d5d5d',
-    '#cc9393',
-    '#9bb09b',
-    '#ebd6b7',
-    '#9db2cf',
-    '#9f9fbd',
-    '#92b3b3',
-    '#faf5eb',
-  },
-  scrollbar_thumb = '#4e4e4e',
+local palette = require('colors._palette')
 
-  tab_bar = {
-    -- The color of the strip that goes along the top of the window
-    -- (does not apply when fancy tab bar is in use)
-    background = '#191919',
-    active_tab = {
-      bg_color = '#242424',     -- background color
-      fg_color = '#9d9d9d',     -- text color
-      intensity = 'Bold',       -- default is "Normal" (options: "Half", "Normal" or "Bold")
-      underline = 'Single',     -- default is "None" (options: "None", "Single" or "Double")
-      italic = false,           -- default is false
-      strikethrough = false,    -- default is false
-    },
+local scheme_name = 'achroma'
 
-    --[[ inactive_tab = { -- same options as `active_tab` section
-			bg_color = "#191919",
-			fg_color = "#4e4e4e",
-			italic = true,
-		}, ]]
+local scheme = {
+   foreground = palette.mono21,
+   background = palette.mono02,
+   compose_cursor = palette.mono19,
+   cursor_fg = palette.mono25,
+   cursor_bg = palette.mono17,
+   cursor_border = palette.mono17,
+   selection_bg = palette.mono06,
+   selection_fg = palette.mono19,
 
-    --[[ inactive_tab_hover = { -- same options as `active_tab` section
-			bg_color = "#191919",
-			fg_color = "#5d5d5d",
-			italic = true,
-		}, ]]
+   -- order: black > red > green > yellow > blue > magenta > cyan > white
+   ansi = {
+      palette.mono10,
+      palette.red00,
+      palette.green00,
+      palette.yellow00,
+      palette.blue00,
+      palette.magenta00,
+      palette.cyan00,
+      palette.acc07,
+   },
+   brights = {
+      palette.mono13,
+      palette.red01,
+      palette.green01,
+      palette.yellow01,
+      palette.blue01,
+      palette.magenta01,
+      palette.cyan01,
+      palette.acc08,
+   },
+   scrollbar_thumb = palette.mono11,
 
-    new_tab = {   -- same options as `active_tab` section
-      bg_color = '#191919',
-      fg_color = '#4e4e4e',
-    },
-
-    new_tab_hover = {   -- same options as `active_tab` section
-      bg_color = '#191919',
-      fg_color = '#5d5d5d',
-    },
-  },
-  split = '#353535',
+   tab_bar = {
+      background = palette.mono02,
+      active_tab = {
+         bg_color = palette.mono04,
+         fg_color = palette.mono19,
+         intensity = 'Bold',
+         underline = 'Single',
+         italic = false,
+         strikethrough = false,
+      },
+      new_tab = {
+         bg_color = palette.mono02,
+         fg_color = palette.mono11,
+      },
+      new_tab_hover = {
+         bg_color = palette.mono02,
+         fg_color = palette.mono13,
+      },
+   },
+   split = palette.mono07,
 }
 
-return colorscheme
+local theme = {
+   color_scheme = scheme_name,
+   color_schemes = {
+      [scheme_name] = scheme,
+   },
+
+   -- Compatibility for modules that read `colors.custom.background`.
+   active = scheme,
+   background = scheme.background,
+   foreground = scheme.foreground,
+
+   command_palette_bg_color = palette.mono04,
+   command_palette_fg_color = palette.mono19,
+
+   -- TODO: reference option - review and enable if desired.
+   -- char_select_bg_color = palette.mono04,
+   -- TODO: reference option - review and enable if desired.
+   -- char_select_fg_color = palette.mono21,
+
+   -- TODO: reference option - review and enable if desired.
+   -- pane_select_bg_color = palette.acc07,
+   -- TODO: reference option - review and enable if desired.
+   -- pane_select_fg_color = palette.mono02,
+
+   -- TODO: reference option - review and enable if desired.
+   -- bold_brightens_ansi_colors = 'No',
+
+   -- TODO: reference options - review and enable if desired.
+   -- colors = {
+   --    copy_mode_active_highlight_bg = { Color = palette.yellow01 },
+   --    copy_mode_active_highlight_fg = { Color = palette.mono02 },
+   --    copy_mode_inactive_highlight_bg = { Color = palette.yellow00 },
+   --    copy_mode_inactive_highlight_fg = { Color = palette.mono02 },
+   --    quick_select_label_bg = { Color = palette.yellow01 },
+   --    quick_select_label_fg = { Color = palette.mono02 },
+   --    quick_select_match_bg = { Color = palette.yellow00 },
+   --    quick_select_match_fg = { Color = palette.mono02 },
+   --    input_selector_label_bg = { Color = palette.mono03 },
+   --    input_selector_label_fg = { Color = palette.acc07 },
+   -- },
+}
+
+return theme

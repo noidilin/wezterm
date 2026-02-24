@@ -1,6 +1,6 @@
 local gpu_adapters = require('utils.gpu-adapter')
 -- local backdrops = require('utils.backdrops')
-local colors = require('colors.custom')
+local theme = require('colors.custom')
 local is_dark = true
 
 return {
@@ -19,8 +19,9 @@ return {
    default_cursor_style = 'BlinkingBar',
    cursor_blink_rate = 650,
 
-   -- color scheme
-   colors = colors,
+   -- color schemes
+   color_schemes = theme.color_schemes,
+   color_scheme = theme.color_scheme,
 
    -- background
    -- background = backdrops:create_opts(),
@@ -56,9 +57,23 @@ return {
       brightness = is_dark and 0.8 or 0.95,
    },
 
-   command_palette_bg_color = '#242424',
-   command_palette_fg_color = '#9d9d9d',
+   command_palette_bg_color = theme.command_palette_bg_color,
+   command_palette_fg_color = theme.command_palette_fg_color,
    command_palette_rows = 14,
+
+   -- TODO: reference option - review and enable if desired.
+   -- char_select_bg_color = theme.char_select_bg_color,
+   -- TODO: reference option - review and enable if desired.
+   -- char_select_fg_color = theme.char_select_fg_color,
+   -- TODO: reference option - review and enable if desired.
+   -- pane_select_bg_color = theme.pane_select_bg_color,
+   -- TODO: reference option - review and enable if desired.
+   -- pane_select_fg_color = theme.pane_select_fg_color,
+
+   -- TODO: reference option - review and enable if desired.
+   -- colors = theme.colors,
+   -- TODO: reference option - review and enable if desired.
+   -- bold_brightens_ansi_colors = theme.bold_brightens_ansi_colors,
 
    visual_bell = {
       fade_in_function = 'EaseIn',
