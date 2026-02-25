@@ -1,4 +1,5 @@
 local wezterm = require('wezterm')
+local mux = wezterm.mux
 local act = wezterm.action
 
 -- [[ Neovim: smart-splits ]]
@@ -78,6 +79,9 @@ local keys = {
   { key = 'x',        mods = 'LEADER',        action = act.CloseCurrentPane({ confirm = false }) },
   { key = 'z',        mods = 'LEADER',        action = act.TogglePaneZoomState },
   { key = 'o',        mods = 'LEADER',        action = act.RotatePanes('Clockwise') },
+  { key = '!',        mods = 'LEADER|SHIFT',  action = wezterm.action_callback(function(_, pane)
+    pane:move_to_new_window()
+  end) },
 
   -- Pane resize
   { key = 'H',        mods = 'LEADER|SHIFT',  action = act.AdjustPaneSize({ 'Left', 5 }) },
