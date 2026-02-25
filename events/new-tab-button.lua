@@ -2,7 +2,7 @@ local wezterm = require('wezterm')
 local launch_menu = require('config.launch').launch_menu
 local domains = require('config.domains')
 local Cells = require('utils.cells')
-local palette = require('colors._palette')
+local palette = require('utils.palette')
 
 local nf = wezterm.nerdfonts
 local act = wezterm.action

@@ -2,7 +2,7 @@
 
 local wezterm = require('wezterm')
 local Cells = require('utils.cells')
-local palette = require('colors._palette')
+local palette = require('utils.palette')
 
 -- Constants and icons
 local nf = wezterm.nerdfonts

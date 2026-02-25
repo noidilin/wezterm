@@ -1,5 +1,5 @@
 local wezterm = require('wezterm')
-local colors = require('colors.custom')
+local colors = require('config.theme')
 
 -- Seeding random numbers before generating for use
 -- Known issue with lua math library
@@ -15,7 +15,7 @@ local GLOB_PATTERN = '*.{jpg,jpeg,png,gif,bmp,ico,tiff,pnm,dds,tga}'
 ---@field current_idx number index of current image
 ---@field images string[] background images
 ---@field images_dir string directory of background images. Default is `wezterm.config_dir .. '/backdrops/'`
----@field focus_color string background color when in focus mode. Default is `colors.custom.background`
+---@field focus_color string background color when in focus mode. Default is `config.theme.background`
 ---@field focus_on boolean focus mode on or off
 local BackDrops = {}
 BackDrops.__index = BackDrops
@@ -63,7 +63,7 @@ function BackDrops:set_images()
 end
 
 ---Override the default `focus_color`
----Default `focus_color` is `colors.custom.background`
+---Default `focus_color` is `config.theme.background`
 ---@param focus_color string background color when in focus mode
 function BackDrops:set_focus(focus_color)
 	self.focus_color = focus_color

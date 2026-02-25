@@ -1,6 +1,6 @@
 local gpu_adapters = require('utils.gpu-adapter')
 -- local backdrops = require('utils.backdrops')
-local theme = require('colors.custom')
+local theme = require('config.theme')
 local is_dark = true
 
 return {

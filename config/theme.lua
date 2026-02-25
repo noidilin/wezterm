@@ -1,5 +1,5 @@
 local wezterm = require('wezterm')
-local palette = require('colors._palette')
+local palette = require('utils.palette')
 
 local scheme_name = 'achroma'
 
@@ -64,7 +64,7 @@ local theme = {
 		[scheme_name] = scheme,
 	},
 
-	-- Compatibility for modules that read `colors.custom.background`.
+	-- Compatibility for modules that read `config.theme.background`.
 	active = scheme,
 	background = scheme.background,
 	foreground = scheme.foreground,

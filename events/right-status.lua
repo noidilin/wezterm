@@ -1,7 +1,7 @@
 local wezterm = require('wezterm')
 local umath = require('utils.math')
 local Cells = require('utils.cells')
-local palette = require('colors._palette')
+local palette = require('utils.palette')
 
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
