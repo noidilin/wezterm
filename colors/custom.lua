@@ -1,3 +1,4 @@
+local wezterm = require('wezterm')
 local palette = require('colors._palette')
 
 local scheme_name = 'achroma'
@@ -41,7 +42,7 @@ local scheme = {
 			bg_color = palette.mono04,
 			fg_color = palette.mono19,
 			intensity = 'Bold',
-			underline = 'None',
+			underline = 'Single',
 			italic = false,
 			strikethrough = false,
 		},

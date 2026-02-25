@@ -45,23 +45,23 @@ local SHELL_PROCESSES = {
 local colors = {
    text_default          = { bg = palette.mono02, fg = palette.mono09 },
    text_hover            = { bg = palette.mono02, fg = palette.mono12 },
-   text_active           = { bg = palette.mono02, fg = palette.mono19 },
+   text_active           = { bg = palette.mono02, fg = palette.mono21 },
 
    state_default         = { bg = palette.mono02, fg = palette.mono09 },
    state_hover           = { bg = palette.mono02, fg = palette.mono12 },
-   state_active          = { bg = palette.mono02, fg = palette.mono19 },
+   state_active          = { bg = palette.mono02, fg = palette.mono21 },
 
    zoom_default          = { bg = palette.mono02, fg = palette.mono09 },
    zoom_hover            = { bg = palette.mono02, fg = palette.mono12 },
-   zoom_active           = { bg = palette.mono02, fg = palette.mono19 },
+   zoom_active           = { bg = palette.mono02, fg = palette.blue01 },
 
-   attention_default     = { bg = palette.mono02, fg = palette.yellow00 },
-   attention_hover       = { bg = palette.mono02, fg = palette.yellow01 },
-   attention_active      = { bg = palette.mono02, fg = palette.yellow01 },
+   attention_default     = { bg = palette.mono02, fg = palette.mono09 },
+   attention_hover       = { bg = palette.mono02, fg = palette.mono12 },
+   attention_active      = { bg = palette.mono02, fg = palette.mono21 },
 
    progress_default      = { bg = palette.mono02, fg = palette.mono09 },
    progress_hover        = { bg = palette.mono02, fg = palette.mono12 },
-   progress_active       = { bg = palette.mono02, fg = palette.mono19 },
+   progress_active       = { bg = palette.mono02, fg = palette.mono21 },
 }
 
 -- Helper functions
