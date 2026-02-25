@@ -20,10 +20,12 @@ local GLYPH_WSL = nf.md_arch --[[ '󰣇' ]]
 
 ---@type table<string, {icon: string, label: string}>
 local MODE_MAP = {
-	resize_pane = { icon = GLYPH_RESIZE, label = 'resize' },
-	move_tab = { icon = GLYPH_MOVE, label = 'move' },
+	resize = { icon = GLYPH_RESIZE, label = 'resize' },
+	move = { icon = GLYPH_MOVE, label = 'move' },
+	view = { icon = GLYPH_SEARCH, label = 'view' },
 	copy_mode = { icon = GLYPH_COPY, label = 'copy' },
 	search_mode = { icon = GLYPH_SEARCH, label = 'search' },
+	mux = { icon = GLYPH_DEFAULT_MODE, label = 'mux' },
 }
 
 ---@type table<string, Cells.SegmentColors>

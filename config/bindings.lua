@@ -1,6 +1,13 @@
 local wezterm = require('wezterm')
-local mux = wezterm.mux
 local act = wezterm.action
+
+local function clone_list(list)
+	local out = {}
+	for i = 1, #list do
+		out[i] = list[i]
+	end
+	return out
+end
 
 -- [[ Neovim: smart-splits ]]
 ---- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
@@ -58,8 +65,8 @@ local keys = {
   { key = 'F1',       mods = 'NONE',          action = act.ActivateCopyMode },
   { key = 'F3',       mods = 'NONE',          action = act.ActivateCommandPalette },
   { key = 'F4',       mods = 'NONE',          action = act.ShowLauncherArgs({ flags = 'FUZZY|LAUNCH_MENU_ITEMS|DOMAINS' }) },
-  { key = 'F5',       mods = 'NONE',          action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
-  { key = 'F6',       mods = 'NONE',          action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }), },
+  { key = 'F5',       mods = 'NONE',          action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }), },
+  { key = 'F6',       mods = 'NONE',          action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
   { key = 'F11',      mods = 'NONE',          action = act.ToggleFullScreen },
   { key = 'F12',      mods = 'NONE',          action = act.ShowDebugOverlay },
   -- { key = "phys:Space", mods = "LEADER",        action = act.ActivateCommandPalette },
@@ -96,13 +103,17 @@ local keys = {
   -- Adjust tab order
   { key = 'Tab',      mods = 'CTRL|SHIFT',    action = act.ActivateTabRelative(-1) },
   { key = 'Tab',      mods = 'CTRL',          action = act.ActivateTabRelative(1) },
-  ---- Or shortcuts to move tab w/o move_tab table. SHIFT is for when caps lock is on
+  ---- Or shortcuts to move tab w/o move mode. SHIFT is for when caps lock is on
   { key = '<',        mods = 'LEADER|SHIFT',  action = act.MoveTabRelative(-1) },
   { key = '>',        mods = 'LEADER|SHIFT',  action = act.MoveTabRelative(1) },
 
-  -- Key table for moving tabs and resize pane
-  { key = 'm',        mods = 'LEADER',        action = act.ActivateKeyTable({ name = 'move_tab', one_shot = false }), },
-  { key = 's',        mods = 'LEADER',        action = act.ActivateKeyTable({ name = 'resize_pane', one_shot = false }), },
+  -- Key tables for move/resize/view/copy/mux
+  { key = 'm',        mods = 'LEADER',        action = act.ActivateKeyTable({ name = 'move', one_shot = false }), },
+  { key = 's',        mods = 'LEADER',        action = act.ActivateKeyTable({ name = 'resize', one_shot = false }), },
+  { key = 'v',        mods = 'LEADER',        action = act.ActivateKeyTable({ name = 'view', one_shot = false }), },
+  { key = 'y',        mods = 'LEADER',        action = act.ActivateCopyMode },
+  { key = 'f',        mods = 'LEADER',        action = act.Search({ CaseInSensitiveString = '' }) },
+  { key = 'w',        mods = 'LEADER',        action = act.ActivateKeyTable({ name = 'mux', one_shot = false }), },
 
   -- smart-splits
   ---- move between split panes
@@ -116,11 +127,6 @@ local keys = {
   split_nav('resize', 'k'),
   split_nav('resize', 'l'),
 
-  -- panes: scroll pane
-  -- { key = 'u',        mods = mod.SUPER, action = act.ScrollByLine(-5) },
-  -- { key = 'd',        mods = mod.SUPER, action = act.ScrollByLine(5) },
-  { key = 'PageUp',   mods = 'NONE', action = act.ScrollByPage(-0.75) },
-  { key = 'PageDown', mods = 'NONE', action = act.ScrollByPage(0.75) },
 }
 
 for i = 1, 9 do
@@ -132,23 +138,75 @@ for i = 1, 9 do
 end
 
 -- stylua: ignore
+local copy_mode = clone_list(((wezterm.gui and wezterm.gui.default_key_tables) and wezterm.gui.default_key_tables().copy_mode) or {})
+table.insert(copy_mode, { key = '/', action = act.Search({ CaseInSensitiveString = '' }) })
+table.insert(
+	copy_mode,
+	{ key = 'q', mods = 'CTRL', action = act.CopyMode({ SetSelectionMode = 'Block' }) }
+)
+
+local mux_menu = act.Multiple({
+	act.ShowLauncherArgs({ title = 'mux', flags = 'FUZZY|WORKSPACES|DOMAINS' }),
+	'PopKeyTable',
+})
+
 local key_tables = {
-  resize_pane = {
-    { key = 'h',      action = act.AdjustPaneSize({ 'Left', 1 }) },
-    { key = 'j',      action = act.AdjustPaneSize({ 'Down', 1 }) },
-    { key = 'k',      action = act.AdjustPaneSize({ 'Up', 1 }) },
-    { key = 'l',      action = act.AdjustPaneSize({ 'Right', 1 }) },
-    { key = 'Escape', action = 'PopKeyTable' },
-    { key = 'Enter',  action = 'PopKeyTable' },
-  },
-  move_tab = {
-    { key = 'h',      action = act.MoveTabRelative(-1) },
-    { key = 'j',      action = act.MoveTabRelative(-1) },
-    { key = 'k',      action = act.MoveTabRelative(1) },
-    { key = 'l',      action = act.MoveTabRelative(1) },
-    { key = 'Escape', action = 'PopKeyTable' },
-    { key = 'Enter',  action = 'PopKeyTable' },
-  },
+	resize = {
+		{ key = 'h', action = act.AdjustPaneSize({ 'Left', 1 }) },
+		{ key = 'j', action = act.AdjustPaneSize({ 'Down', 1 }) },
+		{ key = 'k', action = act.AdjustPaneSize({ 'Up', 1 }) },
+		{ key = 'l', action = act.AdjustPaneSize({ 'Right', 1 }) },
+		{ key = 'Escape', action = 'PopKeyTable' },
+		{ key = 'Enter', action = 'PopKeyTable' },
+		{ key = 'q', action = 'PopKeyTable' },
+	},
+	move = {
+		{ key = 'h', action = act.MoveTabRelative(-1) },
+		{ key = 'j', action = act.MoveTabRelative(-1) },
+		{ key = 'k', action = act.MoveTabRelative(1) },
+		{ key = 'l', action = act.MoveTabRelative(1) },
+		{ key = 'Escape', action = 'PopKeyTable' },
+		{ key = 'Enter', action = 'PopKeyTable' },
+		{ key = 'q', action = 'PopKeyTable' },
+	},
+	view = {
+		{ key = 'k', action = act.ScrollByLine(-1) },
+		{ key = 'j', action = act.ScrollByLine(1) },
+		{ key = 'k', mods = 'SHIFT', action = act.ScrollByLine(-10) },
+		{ key = 'j', mods = 'SHIFT', action = act.ScrollByLine(10) },
+		{ key = 'u', action = act.ScrollByPage(-0.5) },
+		{ key = 'd', action = act.ScrollByPage(0.5) },
+		{ key = 'u', mods = 'SHIFT', action = act.ScrollByPage(-1) },
+		{ key = 'd', mods = 'SHIFT', action = act.ScrollByPage(1) },
+		{ key = 'Home', action = act.ScrollToTop },
+		{ key = 'End', action = act.ScrollToBottom },
+		{ key = 'Escape', action = 'PopKeyTable' },
+		{ key = 'Enter', action = 'PopKeyTable' },
+		{ key = 'q', action = 'PopKeyTable' },
+	},
+	copy_mode = copy_mode,
+	mux = {
+		{ key = 'o', action = mux_menu },
+		{
+			key = 'n',
+			action = act.Multiple({
+				act.PromptInputLine({
+					description = 'New workspace:',
+					action = wezterm.action_callback(function(window, pane, line)
+						if line and line ~= '' then
+							window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
+						end
+					end),
+				}),
+				'PopKeyTable',
+			}),
+		},
+		{ key = 'h', action = act.SwitchWorkspaceRelative(-1) },
+		{ key = 'l', action = act.SwitchWorkspaceRelative(1) },
+		{ key = 'Escape', action = 'PopKeyTable' },
+		{ key = 'Enter', action = 'PopKeyTable' },
+		{ key = 'q', action = 'PopKeyTable' },
+	},
 }
 
 local mouse_bindings = {
