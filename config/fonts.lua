@@ -5,12 +5,19 @@ local platform = require('utils.platform')
 local font_family = 'CommitMono Nerd Font Mono'
 local font_size = platform.is_win and 12.5 or 14
 local line_height = platform.is_win and 1.5 or 1.3
+local half_intensity_font = {
+	family = font_family,
+	weight = 'DemiLight',
+}
 
 return {
-	font = wezterm.font({
-		family = font_family,
-		-- weight = 'Medium',
-	}),
+	font = wezterm.font({ family = font_family }),
+	font_rules = {
+		{
+			intensity = 'Half', -- if match this rule
+			font = wezterm.font(half_intensity_font), -- apply this font
+		},
+	},
 	font_size = font_size,
 	line_height = line_height,
 	command_palette_font = wezterm.font(font_family),
