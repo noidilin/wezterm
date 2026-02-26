@@ -1,4 +1,4 @@
-local wezterm = require('wezterm')
+local wezterm = require('wezterm') ---@type Wezterm
 local platform = require('utils.platform')
 
 ---@alias WeztermGPUBackend 'Vulkan'|'Metal'|'Gl'|'Dx12'

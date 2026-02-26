@@ -1,4 +1,4 @@
-local wezterm = require('wezterm')
+local wezterm = require('wezterm') ---@type Wezterm
 
 local function is_found(str, pattern)
 	return string.find(str, pattern) ~= nil

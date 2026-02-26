@@ -1,4 +1,4 @@
-local wezterm = require('wezterm')
+local wezterm = require('wezterm') ---@type Wezterm
 local palette = require('utils.palette')
 
 local scheme_name = 'achroma'

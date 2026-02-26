@@ -1,4 +1,4 @@
-local wezterm = require('wezterm')
+local wezterm = require('wezterm') ---@type Wezterm
 local act = wezterm.action
 
 local function clone_list(list)
@@ -85,7 +85,7 @@ local keys = {
   -- Pane manipulate
   { key = 'x',        mods = 'LEADER',        action = act.CloseCurrentPane({ confirm = false }) },
   { key = 'z',        mods = 'LEADER',        action = act.TogglePaneZoomState },
-  { key = 'o',        mods = 'LEADER',        action = act.RotatePanes('Clockwise') },
+  -- { key = 'o',        mods = 'LEADER',        action = act.RotatePanes("SwapWithActive") },
   { key = '!',        mods = 'LEADER|SHIFT',  action = wezterm.action_callback(function(_, pane)
     pane:move_to_new_window()
   end) },

@@ -1,4 +1,4 @@
-local wezterm = require('wezterm')
+local wezterm = require('wezterm') ---@type Wezterm
 local umath = require('utils.math')
 local Cells = require('utils.cells')
 local palette = require('utils.palette')

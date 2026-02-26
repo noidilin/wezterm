@@ -1,4 +1,4 @@
-local wezterm = require('wezterm')
+local wezterm = require('wezterm') ---@type Wezterm
 local colors = require('config.theme')
 
 -- Seeding random numbers before generating for use
