@@ -1,4 +1,7 @@
 local platform = require('utils.platform')
+local custom = require('utils.custom')
+
+local default_shell = custom.get_platform('executable.default_shell', 'nu')
 
 local options = {
 	default_prog = {},
@@ -6,7 +9,7 @@ local options = {
 }
 
 if platform.is_win then
-	options.default_prog = { 'nu' }
+	options.default_prog = { default_shell }
 	options.launch_menu = {
 		{ label = 'wsl arch', domain = { DomainName = 'wsl.arch' } },
 		{ label = 'nu', args = { 'nu' } },
@@ -15,7 +18,7 @@ if platform.is_win then
 		{ label = 'powershell', args = { 'powershell' } },
 	}
 elseif platform.is_mac then
-	options.default_prog = { '/opt/homebrew/bin/nu', '-l' }
+	options.default_prog = { default_shell, '-l' }
 	options.launch_menu = {
 		{ label = 'bash', args = { 'bash', '-l' } },
 		{ label = 'fish', args = { '/opt/homebrew/bin/fish', '-l' } },
@@ -23,7 +26,7 @@ elseif platform.is_mac then
 		{ label = 'zsh', args = { 'zsh', '-l' } },
 	}
 elseif platform.is_linux then
-	options.default_prog = { 'fish', '-l' }
+	options.default_prog = { default_shell, '-l' }
 	options.launch_menu = {
 		{ label = 'bash', args = { 'bash', '-l' } },
 		{ label = 'fish', args = { 'fish', '-l' } },

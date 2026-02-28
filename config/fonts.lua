@@ -1,10 +1,10 @@
 local wezterm = require('wezterm') ---@type Wezterm
-local platform = require('utils.platform')
+local custom = require('utils.custom')
 
 -- local font_family = 'Maple Mono Normal NF CN'
-local font_family = 'CommitMono Nerd Font Mono'
-local font_size = platform.is_win and 12.5 or 14
-local line_height = platform.is_win and 1.5 or 1.3
+local font_family = custom.get('font.family', 'CommitMono Nerd Font Mono')
+local font_size = custom.get_platform('font.size', 14)
+local line_height = custom.get_platform('font.line_height', 1.3)
 local half_intensity_font = {
 	family = font_family,
 	weight = 'DemiLight',

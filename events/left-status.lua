@@ -1,11 +1,13 @@
 local wezterm = require('wezterm') ---@type Wezterm
 local Cells = require('utils.cells')
+local custom = require('utils.custom')
 local palette = require('utils.palette')
 
 local nf = wezterm.nerdfonts
 local attr = Cells.attr
 
 local M = {}
+local profile_label = custom.get('name.profile', 'noid')
 
 local GLYPH_SEMI_CIRCLE_LEFT = nf.ple_left_half_circle_thick --[[ '' ]]
 local GLYPH_SEMI_CIRCLE_RIGHT = nf.ple_right_half_circle_thick --[[ '' ]]
@@ -47,7 +49,7 @@ cells
 		attr(attr.intensity('Bold'))
 	)
 	:add_segment('mode_icon', GLYPH_DEFAULT_MODE, colors.default, attr(attr.intensity('Bold')))
-	:add_segment('mode_label', 'noid', colors.default, attr(attr.intensity('Bold')))
+	:add_segment('mode_label', profile_label, colors.default, attr(attr.intensity('Bold')))
 	:add_segment(
 		'scircle_right',
 		GLYPH_SEMI_CIRCLE_RIGHT .. ' ',
@@ -99,7 +101,7 @@ local function resolve_mode(window)
 		return GLYPH_LEADER, safe_lower(key_table)
 	end
 
-	return GLYPH_DEFAULT_MODE, 'noid'
+	return GLYPH_DEFAULT_MODE, profile_label
 end
 
 ---@param pane Pane

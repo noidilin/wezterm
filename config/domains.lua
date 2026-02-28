@@ -1,4 +1,9 @@
 local platform = require('utils.platform')
+local custom = require('utils.custom')
+
+local home_dir = custom.get('name.home_dir', 'noid')
+local default_cwd = '/home/' .. home_dir
+local linux_shell = custom.get('executable.default_shell.linux', 'nu')
 
 local options = {
 	-- ref: https://wezfurlong.org/wezterm/config/lua/SshDomain.html
@@ -12,9 +17,9 @@ local options = {
 		{
 			name = 'wsl.arch',
 			distribution = 'archlinux',
-			username = 'noid',
-			default_cwd = '/home/noid',
-			default_prog = { 'nu' },
+			username = home_dir,
+			default_cwd = default_cwd,
+			default_prog = { linux_shell },
 		},
 	},
 }
@@ -26,8 +31,8 @@ if platform.is_win then
 			name = 'wsl.ssh',
 			remote_address = 'localhost',
 			multiplexing = 'None',
-			default_cwd = '/home/noid',
-			default_prog = { 'nu' },
+			default_cwd = default_cwd,
+			default_prog = { linux_shell },
 			assume_shell = 'Posix',
 		},
 	}

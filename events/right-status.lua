@@ -1,6 +1,7 @@
 local wezterm = require('wezterm') ---@type Wezterm
 local umath = require('utils.math')
 local Cells = require('utils.cells')
+local custom = require('utils.custom')
 local palette = require('utils.palette')
 
 local nf = wezterm.nerdfonts
@@ -14,6 +15,7 @@ local memory_cache = {
 }
 
 local ICON_MEMORY = '󰍛'
+local starship_executable = custom.get_platform('executable.starship', 'starship')
 
 ---@type string[]
 local discharging_icons = {
@@ -59,9 +61,8 @@ cells
 
 ---@return string
 local function get_memory_usage()
-	-- TODO: support WSL, Arch Linux, and Windows starship paths.
 	local pcall_ok, ok, output, _ = pcall(wezterm.run_child_process, {
-		'/opt/homebrew/bin/starship',
+		starship_executable,
 		'module',
 		'memory_usage',
 	})
