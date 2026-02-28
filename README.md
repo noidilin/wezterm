@@ -5,7 +5,7 @@ A personal fork of Kevin Silvester's WezTerm setup, now significantly diverged f
 - Original upstream: [KevinSilvester/wezterm-config](https://github.com/KevinSilvester/wezterm-config)
 - Visual inspiration: [GrzegorzKozub/wezterm](https://github.com/GrzegorzKozub/wezterm)
 
-![screenshot](./.github/screenshots/wezterm.gif)
+![screenshot](./.github/screenshots/screenshot.png)
 
 ---
 
