@@ -1,7 +1,8 @@
 return {
 	name = {
-		home_dir = 'noid',
-		profile = 'noid',
+		status_label = 'noid',
+		ssh_user = 'noid',
+		wsl_user = 'noid',
 		workspace = 'main',
 	},
 

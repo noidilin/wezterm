@@ -106,8 +106,8 @@ icon-alt/ # optional macOS alternative app icon assets
 
 Start here if you want to adapt this config to your machine:
 
-- `config/custom.lua` - common personal values (profile, shell, workspace, Starship, fonts)
-- `config/launch.lua` - default shell + launch menu per OS
+- `config/custom.lua` - common personal values (status label, shell, workspace, Starship, fonts)
+- `config/launch-menu.lua` - default shell + launch menu per OS
 - `config/domains.lua` - SSH/WSL/unix domains
 - `config/fonts.lua` - font family, size, line height
 - `config/appearance.lua` - theme, tab bar/window, GPU front-end
@@ -118,9 +118,10 @@ Start here if you want to adapt this config to your machine:
 
 Edit only `config/custom.lua` for high-frequency personalization:
 
-- Profile label in left status: set `name.profile`
+- Status label in left status: set `name.status_label`
 - Startup workspace: set `name.workspace`
-- WSL/SSH home path defaults (`/home/<name>`): set `name.home_dir`
+- SSH default user path (`/home/<name>`): set `name.ssh_user`
+- WSL default user + path (`/home/<name>`): set `name.wsl_user`
 - Default shell executable per OS: set `executable.default_shell.windows|mac|linux`
 - Starship executable per OS (right status memory module): set `executable.starship.windows|mac|linux`
 - Font family and per-OS sizing: set `font.family`, `font.size.*`, `font.line_height.*`
