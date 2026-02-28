@@ -69,23 +69,26 @@ Leader key:
 
 Examples:
 
-- `F1` - copy mode
 - `F3` - command palette
-- `F4` - launcher (menu/domains)
-- `F5` - workspace launcher
-- `F6` - tab launcher
-- `LEADER + -` - split vertical
-- `LEADER + \` - split horizontal
-- `LEADER + x` - close pane
-- `LEADER + z` - zoom pane
-- `LEADER + c` - new tab
-- `LEADER + &` - close tab
-- `LEADER + m` - move key table
-- `LEADER + s` - resize key table
-- `LEADER + v` - view/scroll key table
-- `LEADER + y` - copy mode
-- `LEADER + f` - search
-- `LEADER + w` - mux key table
+- launcher
+  - `F4` - menu/domains
+  - `F5` - workspace
+  - `F6` - tab
+- pane:
+  - `LEADER + -` - split vertical
+  - `LEADER + \` - split horizontal
+  - `LEADER + x` - close pane
+  - `LEADER + z` - zoom pane
+- tab:
+  - `LEADER + c` - new tab
+  - `LEADER + &` - close tab
+- mode:
+  - `LEADER + m` - move
+  - `LEADER + s` - resize
+  - `LEADER + v` - view/scroll
+  - `LEADER + y` - copy
+  - `LEADER + f` - search
+  - `LEADER + w` - mux
 
 For full details, see `config/bindings.lua`.
 
@@ -102,29 +105,28 @@ utils/    # helpers (cells, backdrops, gpu adapter, platform, math)
 icon-alt/ # optional macOS alternative app icon assets
 ```
 
-### Key Entry Point
+### Quick Custom Recipes
+
+Edit `config/custom.lua` for high-frequency personalization:
+
+- Status label in left status
+- Startup workspace
+- SSH default user path (`/home/<name>`)
+- WSL default user path (`/home/<name>`)
+- Default shell executable per OS
+- Starship executable per OS (for right status memory module)
+- Font family and per-OS sizing
+
+### Other Key Entry Points
 
 Start here if you want to adapt this config to your machine:
 
-- `config/custom.lua` - common personal values (status label, shell, workspace, Starship, fonts)
 - `config/launch-menu.lua` - default shell + launch menu per OS
 - `config/domains.lua` - SSH/WSL/unix domains
 - `config/fonts.lua` - font family, size, line height
 - `config/appearance.lua` - theme, tab bar/window, GPU front-end
 - `config/theme.lua` - active color scheme and palette mapping
 - `config/bindings.lua` - all keybindings and key tables
-
-### Quick Custom Recipes
-
-Edit only `config/custom.lua` for high-frequency personalization:
-
-- Status label in left status: set `name.status_label`
-- Startup workspace: set `name.workspace`
-- SSH default user path (`/home/<name>`): set `name.ssh_user`
-- WSL default user + path (`/home/<name>`): set `name.wsl_user`
-- Default shell executable per OS: set `executable.default_shell.windows|mac|linux`
-- Starship executable per OS (right status memory module): set `executable.starship.windows|mac|linux`
-- Font family and per-OS sizing: set `font.family`, `font.size.*`, `font.line_height.*`
 
 ---
 

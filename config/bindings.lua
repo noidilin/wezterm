@@ -62,7 +62,6 @@ local keys = {
   -- paste from the clipboard
   { key = 'V',        mods = 'CTRL|SHIFT',    action = act.PasteFrom 'Clipboard' },
 
-  { key = 'F1',       mods = 'NONE',          action = act.ActivateCopyMode },
   { key = 'F3',       mods = 'NONE',          action = act.ActivateCommandPalette },
   { key = 'F4',       mods = 'NONE',          action = act.ShowLauncherArgs({ flags = 'FUZZY|LAUNCH_MENU_ITEMS|DOMAINS' }) },
   { key = 'F5',       mods = 'NONE',          action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }), },
