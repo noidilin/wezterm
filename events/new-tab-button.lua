@@ -1,5 +1,5 @@
 local wezterm = require('wezterm') ---@type Wezterm
-local launch_menu = require('config.launch').launch_menu
+local launch_menu = require('config.launch-menu').launch_menu
 local domains = require('config.domains')
 local Cells = require('utils.cells')
 local palette = require('utils.palette')
