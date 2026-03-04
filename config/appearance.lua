@@ -49,8 +49,9 @@ return {
 	window_close_confirmation = 'NeverPrompt',
 	window_frame = {
 		border_top_height = '0.5cell',
-
-		-- active_titlebar_bg = '#090909',
+		border_top_color = theme.background,
+		active_titlebar_bg = theme.background,
+		inactive_titlebar_bg = theme.background,
 		-- font = fonts.font,
 		-- font_size = fonts.font_size,
 	},
