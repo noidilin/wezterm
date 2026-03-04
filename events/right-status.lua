@@ -15,6 +15,7 @@ local memory_cache = {
 }
 
 local ICON_MEMORY = '󰍛'
+local ICON_WORKTREE = nf.dev_git_branch or ''
 local starship_executable = custom.get_platform('executable.starship', 'starship')
 
 ---@type string[]
@@ -47,6 +48,7 @@ local charging_icons = {
 ---@type table<string, Cells.SegmentColors>
 -- stylua: ignore
 local colors = {
+   worktree  = { fg = palette.mono12, bg = palette.mono02 },
    mem      = { fg = palette.mono12, bg = palette.mono02 },
    battery   = { fg = palette.mono12, bg = palette.mono02 },
 }
@@ -54,10 +56,77 @@ local colors = {
 local cells = Cells:new()
 
 cells
+	:add_segment('worktree_icon', '', colors.worktree, attr(attr.intensity('Bold')))
+	:add_segment('worktree_text', '', colors.worktree, attr(attr.intensity('Bold')))
 	:add_segment('memory_icon', ICON_MEMORY .. ' ', colors.mem, attr(attr.intensity('Bold')))
 	:add_segment('memory_text', '', colors.mem, attr(attr.intensity('Bold')))
 	:add_segment('battery_icon', '', colors.battery)
 	:add_segment('battery_text', '', colors.battery, attr(attr.intensity('Bold')))
+
+---@param text string
+---@param max_len number
+---@return string
+local function truncate(text, max_len)
+	if #text <= max_len then
+		return text
+	end
+	return text:sub(1, max_len - 3) .. '...'
+end
+
+---@param path string
+---@return string
+local function basename(path)
+	local normalized = (path or ''):gsub('\\', '/'):gsub('/+$', '')
+	return normalized:match('([^/]+)$') or normalized
+end
+
+---@param value string
+---@return string
+local function decode_percent_encoded(value)
+	return value:gsub('%%(%x%x)', function(hex)
+		return string.char(tonumber(hex, 16))
+	end)
+end
+
+---@param pane Pane
+---@return string
+local function resolve_worktree_name(pane)
+	local ok, cwd = pcall(function()
+		return pane:get_current_working_dir()
+	end)
+
+	if not ok or cwd == nil then
+		return ''
+	end
+
+	local path = ''
+	if type(cwd) == 'string' then
+		path = cwd
+	elseif type(cwd) == 'userdata' or type(cwd) == 'table' then
+		path = cwd.file_path or cwd.path or tostring(cwd)
+	else
+		path = tostring(cwd)
+	end
+
+	if path == '' then
+		return ''
+	end
+
+	path = decode_percent_encoded(path)
+	path = path:gsub('^file://[^/]*', '')
+
+	local leaf = basename(path)
+	if leaf == '' then
+		return ''
+	end
+
+	local worktree = leaf:match('^[^%.]+%.(.+)$')
+	if not worktree or worktree == '' then
+		return ''
+	end
+
+	return truncate(worktree, 25)
+end
 
 ---@return string
 local function get_memory_usage()
@@ -119,20 +188,30 @@ local function battery_info()
 end
 
 M.setup = function()
-	wezterm.on('update-right-status', function(window, _pane)
+	wezterm.on('update-right-status', function(window, pane)
 		local battery_text, battery_icon = battery_info()
+		local worktree = resolve_worktree_name(pane)
+		local show_worktree = worktree ~= ''
 		refresh_memory_cache(window)
 
 		cells
+			:update_segment_text(
+				'worktree_icon',
+				show_worktree and (' ' .. ICON_WORKTREE .. ' ') or ''
+			)
+			:update_segment_text('worktree_text', show_worktree and worktree .. ' ' or '')
 			:update_segment_text('memory_text', memory_cache.value)
 			:update_segment_text('battery_icon', ' ' .. battery_icon)
 			:update_segment_text('battery_text', battery_text .. ' ')
 
-		window:set_right_status(
-			wezterm.format(
-				cells:render({ 'memory_icon', 'memory_text', 'battery_icon', 'battery_text' })
-			)
-		)
+		window:set_right_status(wezterm.format(cells:render({
+			'worktree_icon',
+			'worktree_text',
+			'memory_icon',
+			'memory_text',
+			'battery_icon',
+			'battery_text',
+		})))
 	end)
 end
 
