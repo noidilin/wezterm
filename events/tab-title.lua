@@ -236,9 +236,23 @@ local function progress_icon(percentage)
 end
 
 ---@param pane any
+---@return any
+local function get_pane_progress(pane)
+	local ok, progress = pcall(function()
+		return pane.progress
+	end)
+
+	if not ok then
+		return nil
+	end
+
+	return progress
+end
+
+---@param pane any
 ---@return string, string|nil
 local function get_progress_display(pane)
-	local progress = pane.progress
+	local progress = get_pane_progress(pane)
 	if progress == nil then
 		return '', nil
 	end
