@@ -3,6 +3,7 @@
 local wezterm = require('wezterm') ---@type Wezterm
 local Cells = require('utils.cells')
 local palette = require('utils.palette')
+local platform = require('utils.platform')
 
 -- Constants and icons
 local nf = wezterm.nerdfonts
@@ -132,7 +133,41 @@ end
 ---@param base_title string
 ---@param max_width number
 ---@param inset number
-local function create_title(process_name, base_title, max_width, inset)
+local function create_title_windows(process_name, base_title, max_width, inset)
+	local title
+
+	if process_name:len() > 0 then
+		title = process_name .. ' ~ ' .. base_title
+	else
+		title = base_title
+	end
+
+	if base_title == 'Debug' then
+		title = GLYPH_DEBUG .. ' DEBUG'
+		inset = inset - 2
+	end
+
+	if base_title:match('^InputSelector:') ~= nil then
+		title = base_title:gsub('InputSelector:', GLYPH_SEARCH)
+		inset = inset - 2
+	end
+
+	if title:len() > max_width - inset then
+		local diff = title:len() - max_width + inset
+		title = title:sub(1, title:len() - diff)
+	else
+		local padding = max_width - title:len() - inset
+		title = title .. string.rep(' ', padding)
+	end
+
+	return title
+end
+
+---@param process_name string
+---@param base_title string
+---@param max_width number
+---@param inset number
+local function create_title_default(process_name, base_title, max_width, inset)
 	local title = cwd_label_from_title(base_title)
 	if process_name ~= '' and not is_shell_process(process_name) then
 		title = process_name
@@ -158,6 +193,18 @@ local function create_title(process_name, base_title, max_width, inset)
 	end
 
 	return title
+end
+
+---@param process_name string
+---@param base_title string
+---@param max_width number
+---@param inset number
+local function create_title(process_name, base_title, max_width, inset)
+	if platform.is_win then
+		return create_title_windows(process_name, base_title, max_width, inset)
+	end
+
+	return create_title_default(process_name, base_title, max_width, inset)
 end
 
 ---@param panes any[] WezTerm https://wezfurlong.org/wezterm/config/lua/pane/index.html
