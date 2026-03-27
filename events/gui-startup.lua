@@ -16,7 +16,7 @@ M.setup = function()
 		end
 
 		local _, _, window = mux.spawn_window(spawn_opts)
-		window:gui_window():maximize()
+		window:gui_window()
 	end)
 end
 
