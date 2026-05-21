@@ -1,5 +1,6 @@
 local wezterm = require('wezterm') ---@type Wezterm
 local act = wezterm.action
+local workspaces = require('config.workspaces')
 
 local function clone_list(list)
 	local out = {}
@@ -144,11 +145,6 @@ table.insert(
 	{ key = 'q', mods = 'CTRL', action = act.CopyMode({ SetSelectionMode = 'Block' }) }
 )
 
-local mux_menu = act.Multiple({
-	act.ShowLauncherArgs({ title = 'mux', flags = 'FUZZY|WORKSPACES|DOMAINS' }),
-	'PopKeyTable',
-})
-
 local key_tables = {
 	resize = {
 		{ key = 'h', action = act.AdjustPaneSize({ 'Left', 1 }) },
@@ -184,28 +180,7 @@ local key_tables = {
 		{ key = 'q', action = 'PopKeyTable' },
 	},
 	copy_mode = copy_mode,
-	mux = {
-		{ key = 'o', action = mux_menu },
-		{
-			key = 'n',
-			action = act.Multiple({
-				act.PromptInputLine({
-					description = 'New workspace:',
-					action = wezterm.action_callback(function(window, pane, line)
-						if line and line ~= '' then
-							window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
-						end
-					end),
-				}),
-				'PopKeyTable',
-			}),
-		},
-		{ key = 'h', action = act.SwitchWorkspaceRelative(-1) },
-		{ key = 'l', action = act.SwitchWorkspaceRelative(1) },
-		{ key = 'Escape', action = 'PopKeyTable' },
-		{ key = 'Enter', action = 'PopKeyTable' },
-		{ key = 'q', action = 'PopKeyTable' },
-	},
+	mux = workspaces.key_table(),
 }
 
 local mouse_bindings = {
