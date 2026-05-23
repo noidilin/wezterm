@@ -16,6 +16,7 @@ local GLYPH_LEADER = nf.cod_debug_breakpoint_data --[[ '' ]]
 local GLYPH_RESIZE = nf.md_arrow_expand --[[ '󰊓' ]]
 local GLYPH_MOVE = nf.md_cursor_move --[[ '󰆾' ]]
 local GLYPH_COPY = nf.md_content_copy --[[ '󰆏' ]]
+local GLYPH_DOCUMENT = nf.md_file_document --[[ '󰈙' ]]
 local GLYPH_SEARCH = nf.md_magnify --[[ '󰍉' ]]
 local GLYPH_ADMIN = nf.md_shield --[[ '󰒘' ]]
 local GLYPH_WSL = nf.md_arch --[[ '󰣇' ]]
@@ -24,7 +25,7 @@ local GLYPH_WSL = nf.md_arch --[[ '󰣇' ]]
 local MODE_MAP = {
 	resize = { icon = GLYPH_RESIZE, label = 'resize' },
 	move = { icon = GLYPH_MOVE, label = 'move' },
-	view = { icon = GLYPH_SEARCH, label = 'view' },
+	view = { icon = GLYPH_DOCUMENT, label = 'view' },
 	copy_mode = { icon = GLYPH_COPY, label = 'copy' },
 	search_mode = { icon = GLYPH_SEARCH, label = 'search' },
 	mux = { icon = GLYPH_DEFAULT_MODE, label = 'mux' },
